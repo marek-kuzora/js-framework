@@ -1,0 +1,5 @@
+projects:
+
+  fierry:
+    main:   source/app.coffee
+    source: source
