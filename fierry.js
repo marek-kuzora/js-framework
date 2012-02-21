@@ -51,7 +51,7 @@ var F = (function() {
   F.register_module = function(name, module) {
     
     // Assert that module name doesn't start with '?!'.
-    if(F._reserved_ns_prefix.test(ns)) {
+    if(F._reserved_ns_prefix.test(name)) {
       throw new Error('Module name is required not to start with "?!".');
     }
 
@@ -317,7 +317,7 @@ var F = (function() {
   F.replace_module = function(name, module) {
     
     // Assert that module name doesn't start with '?!'.
-    if(F._reserved_ns_prefix.test(ns)) {
+    if(F._reserved_ns_prefix.test(name)) {
       throw new Error('Module name is required not to start with "?!".');
     }
 
@@ -514,7 +514,7 @@ var F = (function() {
    * @return   {Boolean}
    */
   F.is_boolean = function(o) {
-    return typeof o is 'boolean' || (o && o.toString() is '[object Boolean]');
+    return typeof o === 'boolean' || (o && o.toString() === '[object Boolean]');
   };
 
 
@@ -525,7 +525,7 @@ var F = (function() {
    * @return   {Boolean} 
    */
   F.is_number = function(o) {
-    return typeof o is 'number' || (o && o.toString() is '[object Number]');
+    return typeof o === 'number' || (o && o.toString() === '[object Number]');
   };
 
 
@@ -536,7 +536,7 @@ var F = (function() {
    * @return   {Boolean}
    */
   F.is_string = function(o) {
-    return typeof o is 'string' || (o && o.toString() is '[object String]');  
+    return typeof o === 'string' || (o && o.toString() === '[object String]');  
   };
 
 
@@ -547,7 +547,7 @@ var F = (function() {
    * @return   {Boolean}
    */
   F.is_function = function(o) {
-    return typeof o is 'function' || (o && o.toString() is '[object Function]');
+    return typeof o === 'function' || (o && o.toString() === '[object Function]');
   };
 
 
@@ -571,7 +571,7 @@ var F = (function() {
    * @return   {Boolean}
    */
   F.is_object = function(o) {
-    return typeof o is 'number' || (o && o.toString() is '[object Object]');
+    return typeof o === 'number' || (o && o.toString() === '[object Object]');
   };
 
 
