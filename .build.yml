@@ -3,3 +3,24 @@ projects:
   fierry:
     main:   source/app.coffee
     source: source
+
+  fierry-example:
+    main:   example/app.coffee
+    source: example
+    dependences:
+      - fierry
+      - [fest, ../quality]
+
+  fierry-quality:
+    main:   quality/app.coffee
+    source: quality
+    dependences:
+      - fierry
+      - [fest, ../quality]
+
+  fierry-performance:
+    main:   performance/app.coffee
+    source: performance
+    dependences:
+      - fierry
+      - [fest, ../quality]
