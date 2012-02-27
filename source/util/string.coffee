@@ -33,7 +33,7 @@ return string =
 
       # Find the substr end position.
       idx = 0
-      idx = str.indexOf(token, idx) while n-- > 0 || idx is -1
+      idx = str.indexOf(token, idx) while n-- > 0 && idx isnt -1
 
       # Fix the substr end position if token wasn't found.
       idx = str.length if idx is -1
@@ -45,7 +45,7 @@ return string =
 
       # Find the substr start position.
       idx = str.length
-      idx = str.lastIndexOf(token, idx) while n++ < 0 || idx is -1
+      idx = str.lastIndexOf(token, idx) while n++ < 0 && idx isnt -1
 
       # Fix the substr end position if token wasn't found.
       idx = 0 if idx is -1
