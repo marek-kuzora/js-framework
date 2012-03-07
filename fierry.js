@@ -259,7 +259,7 @@ var F = (function() {
     var globals = F.get_hierarchy_cache(F._globals_cache_key);
 
     // Restore global variables.
-    for(var name in global) {
+    for(var name in globals) {
       F.unset_global(name);
     }
     
@@ -286,7 +286,7 @@ var F = (function() {
    *
    * @return {Array.<String>}
    */
-  F.list_modules = function() {
+  F.get_loaded_modules = function() {
 
     // Create an empty array for collecting the results.
     var arr = [];
