@@ -35,8 +35,8 @@ return string =
       idx = 0
       idx = str.indexOf(token, idx) while n-- > 0 && idx isnt -1
 
-      # Fix the substr end position if token wasn't found.
-      idx = str.length if idx is -1
+      # Return the initial String if token wasn't found.
+      return str if idx is -1
 
       return str.substr(0, idx)
 
@@ -47,8 +47,8 @@ return string =
       idx = str.length
       idx = str.lastIndexOf(token, idx) while n++ < 0 && idx isnt -1
 
-      # Fix the substr end position if token wasn't found.
-      idx = 0 if idx is -1
+      # Return the initial String if token wasn't found.
+      return str if idx is -1
 
       return str.substr(idx + 1)
 
