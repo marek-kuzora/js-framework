@@ -7,3 +7,4 @@
 
 # Load main groups
 F.run 'fierry-qa/lightspeed/create'
+F.run 'fierry-qa/lightspeed/execute'

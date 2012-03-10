@@ -12,3 +12,4 @@ lightspeed '/execute'
 
 # Load tests.
 F.run 'fierry-qa/lightspeed/execute/function'
+F.run 'fierry-qa/lightspeed/execute/accessors'
