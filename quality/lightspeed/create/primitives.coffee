@@ -28,11 +28,6 @@ lightspeed '/create.primitives'
     return
 
 
-  'function': (i) ->
-    r = (->) while i--
-    return
-
-
 
 #
 # Creating primitives via object wrappers

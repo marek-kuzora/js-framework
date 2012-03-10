@@ -9,12 +9,14 @@ lightspeed 'empty'
 
   'direct': (i) ->
     fn = ->
+
     fn() while i--
     return
 
   
   'via call': (i) ->
     fn = ->
+
     fn.call() while i--
     return
 
@@ -22,9 +24,27 @@ lightspeed 'empty'
   'via call with scope': (i) ->
     fn = ->
     sc = {}
+
     fn.call(sc) while i--
     return
-  
+
+
+
+lightspeed 'one_line'
+
+  'simple': (i) ->
+    fn = (a,b,c) -> a+b+c
+
+    fn(1,2,3) while i--
+    return
+
+
+  'binded': (i) ->
+    arg = 1
+    fn = -> arg
+
+    fn() while i--
+    return
 
 
 
@@ -32,18 +52,21 @@ lightspeed 'array_fn'
 
   '0 length': (i) ->
     array = []
+
     fn() for fn in array while i--
     return
 
 
   '1 length': (i) ->
     array = [(->)]
+
     fn() for fn in array while i--
     return
 
 
   '2 length': (i) ->
     array = [(->), (->)]
+
     fn() for fn in array while i--
     return
 
@@ -58,12 +81,14 @@ lightspeed 'create_wrapping'
 
   'string -fn': (i) ->
     fn = -> x = 'string'
+
     fn() while i--
     return
 
 
   'string -fn -call': (i) ->
     fn = -> x = 'string'
+
     fn.call() while i--
     return
 
@@ -75,12 +100,14 @@ lightspeed 'create_wrapping'
 
   'array -fn': (i) ->
     fn = -> x = []
+
     fn() while i--
     return
 
 
   'array -fn -call': (i) ->
     fn = -> x = []
+
     fn.call() while i--
     return
 
