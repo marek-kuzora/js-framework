@@ -72,6 +72,11 @@ lightspeed 'items'
     return
 
 
+  'mixed': (i) ->
+    a = [0, 1, [], 2, []] while i--
+    return
+
+
   'references': (i) ->
       _0 = []
       _1 = []

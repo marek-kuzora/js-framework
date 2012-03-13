@@ -23,6 +23,7 @@ lightspeed 'one_line'
     return
 
 
+  # This is not complex!
   'complex': (i) ->
     while i--
       fn = -> ['a', ['a', 'b', 'c'], 'b', ['a', 'b', 'c'], 'c']

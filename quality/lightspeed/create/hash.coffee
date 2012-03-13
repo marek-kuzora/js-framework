@@ -11,23 +11,23 @@ lightspeed '/create.hash'
 lightspeed 'length'
 
   ' 0 length': (i) ->
-    a = {} while i--
+    h = {} while i--
     return
 
 
   ' 5 length': (i) ->
-    a = {a:0, b:1, c:2, d:3, e:4} while i--
+    h = {a:0, b:1, c:2, d:3, e:4} while i--
     return
 
 
   '10 length': (i) ->
-    a = {a:0, b:1, c:2, d:3, e:4, f:5, g:6, h:7, i:8, j:9} while i--
+    h = {a:0, b:1, c:2, d:3, e:4, f:5, g:6, h:7, i:8, j:9} while i--
     return
 
 
   '50 length -hash': (i) ->
     while i--
-      a = {
+      h = {
         aa:0, ba:1, ca:2, da:3, ea:4, fa:5, ga:6, ha:7, ia:8, ja:9
         ab:0, bb:1, cb:2, db:3, eb:4, fb:5, gb:6, hb:7, ib:8, jb:9
         ac:0, bc:1, cc:2, dc:3, ec:4, fc:5, gc:6, hc:7, ic:8, jc:9
@@ -48,27 +48,27 @@ lightspeed 'length'
 lightspeed 'items'
 
   'int': (i) ->
-    a = {a: 0, b: 1, c: 2, d: 3, e: 4} while i--
+    h = {a: 0, b: 1, c: 2, d: 3, e: 4} while i--
     return
 
 
   'string': (i) ->
-    a = {a: 'a', b: 'b', c: 'c', d: 'd', e: 'e'} while i--
+    h = {a: 'a', b: 'b', c: 'c', d: 'd', e: 'e'} while i--
     return
 
 
   'function': (i) ->
-    a = {a: (->), b: (->), c: (->), d: (->), e: (->)} while i--
+    h = {a: (->), b: (->), c: (->), d: (->), e: (->)} while i--
     return
 
 
   'hash': (i) ->
-    a = {a: {}, b: {}, c: {}, d: {}, e: {}} while i--
+    h = {a: {}, b: {}, c: {}, d: {}, e: {}} while i--
     return
 
 
   'array': (i) ->
-    a = {a: [], b: [], c: [], d: [], e: []} while i--
+    h = {a: [], b: [], c: [], d: [], e: []} while i--
     return
 
 
@@ -78,8 +78,44 @@ lightspeed 'items'
       _2 = []
       _3 = []
       _4 = []
-      a = {a: _0, b: _1, c: _2, d: _3, e: _4} while i--
+      h = {a: _0, b: _1, c: _2, d: _3, e: _4} while i--
       return
+
+
+
+lightspeed 'ECMA_5'
+
+  ' 0 length': (i) ->
+    h = {}
+
+    Object.create(h) while i--
+    return
+
+
+  ' 5 length': (i) ->
+    h = {a:0, b:1, c:2, d:3, e:4}
+
+    Object.create(h) while i--
+    return
+
+
+  '10 length': (i) ->
+    h = {a:0, b:1, c:2, d:3, e:4, f:5, g:6, h:7, i:8, j:9}
+
+    Object.create(h) while i--
+    return
+
+
+  '50 length': (i) ->
+    h = {
+      aa:0, ba:1, ca:2, da:3, ea:4, fa:5, ga:6, ha:7, ia:8, ja:9
+      ab:0, bb:1, cb:2, db:3, eb:4, fb:5, gb:6, hb:7, ib:8, jb:9
+      ac:0, bc:1, cc:2, dc:3, ec:4, fc:5, gc:6, hc:7, ic:8, jc:9
+      ad:0, bd:1, cd:2, dd:3, ed:4, fd:5, gd:6, hd:7, id:8, jd:9
+      ae:0, be:1, ce:2, de:3, ee:4, fe:5, ge:6, he:7, ie:8, je:9
+    }
+    Object.create(h) while i--
+    return
 
 
 
@@ -90,7 +126,7 @@ lightspeed 'items'
 lightspeed 'nested'
 
   'function -nested': (i) ->
-    a = {a: (->), b: (->), c: (->), d: (->), e: (->)} while i--
+    h = {a: (->), b: (->), c: (->), d: (->), e: (->)} while i--
     return
 
 
@@ -101,12 +137,12 @@ lightspeed 'nested'
       _2 = ->
       _3 = ->
       _4 = ->
-      a = {a: _0, b: _1, c: _2, d: _3, e: _4}
+      h = {a: _0, b: _1, c: _2, d: _3, e: _4}
     return
 
 
   'hash -nested': (i) ->
-    a = {a: {}, b: {}, c: {}, d: {}, e: {}} while i--
+    h = {a: {}, b: {}, c: {}, d: {}, e: {}} while i--
     return
 
 
@@ -117,12 +153,12 @@ lightspeed 'nested'
       _2 = {}
       _3 = {}
       _4 = {}
-      a = {a: _0, b: _1, c: _2, d: _3, e: _4}
+      h = {a: _0, b: _1, c: _2, d: _3, e: _4}
     return
 
 
   'array -nested': (i) ->
-    a = {a: [], b: [], c: [], d: [], e: []} while i--
+    h = {a: [], b: [], c: [], d: [], e: []} while i--
     return
 
   
@@ -133,7 +169,7 @@ lightspeed 'nested'
       _2 = []
       _3 = []
       _4 = []
-      a = {a: _0, b: _1, c: _2, d: _3, e: _4}
+      h = {a: _0, b: _1, c: _2, d: _3, e: _4}
     return
 
 
@@ -144,16 +180,16 @@ lightspeed 'nested'
 lightspeed 'assign'
 
   'inline': (i) ->
-    a = {a: 0, b: 1, c: 2, d: 3, e: 4} while i--
+    h = {a: 0, b: 1, c: 2, d: 3, e: 4} while i--
     return
 
 
   'direct': (i) ->
     while i--
-      a = {}
-      a['a'] = 0
-      a['b'] = 1
-      a['c'] = 2
-      a['d'] = 3
-      a['e'] = 4
+      h = {}
+      h['a'] = 0
+      h['b'] = 1
+      h['c'] = 2
+      h['d'] = 3
+      h['e'] = 4
     return
