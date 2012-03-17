@@ -83,6 +83,9 @@ lightspeed 'items'
 
 
 
+#
+# Creating hashes via Object.create(). Based on hash length.
+#
 lightspeed 'ECMA_5'
 
   ' 0 length': (i) ->
@@ -175,21 +178,95 @@ lightspeed 'nested'
 
 
 #
-# When its items are created inline versus using direct assing.
+# Tests assigning properties to hash execution time.
 #
-lightspeed 'assign'
+lightspeed '/create.hash.assign'
 
-  'inline': (i) ->
-    h = {a: 0, b: 1, c: 2, d: 3, e: 4} while i--
+
+
+#
+# Dynamic assigning via string versus static assign.
+#
+lightspeed 'type'
+
+  'dynamic': (i) ->
+    while i--
+      h = {}
+      h['a'] = 0; h['b'] = 1; h['c'] = 2; h['d'] = 3; h['e'] = 4
     return
 
 
-  'direct': (i) ->
+  'static': (i) ->
     while i--
       h = {}
-      h['a'] = 0
-      h['b'] = 1
-      h['c'] = 2
-      h['d'] = 3
-      h['e'] = 4
+      h.a = 0; h.b= 1; h.c = 2; h.d = 3; h.e = 4
+    return
+
+
+
+#
+# Based on number of properites.
+#
+# It seems that Chrome has real problems with optimizing multiple
+# properties assign. Every 3 items the performance drops
+# significantly.
+#
+lightspeed 'length'
+
+  ' 1 length': (i) ->
+    while i--
+      h = {}
+      h.a = 1
+    return
+
+
+  ' 4 length': (i) ->
+    while i--
+      h = {}
+      h.a = 1; h.b = 1; h.c = 1; h.d = 1
+    return
+
+
+  ' 7 length': (i) ->
+    while i--
+      h = {}
+      h.a = 1; h.b = 1; h.c = 1; h.d = 1; h.e = 1; h.f = 1; h.g = 1
+    return
+
+
+  '10 length': (i) ->
+    while i--
+      h = {}
+      h.a = 1; h.b = 1; h.c = 1; h.d = 1; h.e = 1; h.f = 1; h.g = 1
+      h.h = 1; h.i = 1; h.j = 1
+    return
+
+
+  '15 length': (i) ->
+    while i--
+      h = {}
+      h.a = 1; h.b = 1; h.c = 1; h.d = 1; h.e = 1; h.f = 1; h.g = 1
+      h.h = 1; h.i = 1; h.j = 1; h.aa = 1; h.ba = 1; h.ca = 1; h.da = 1
+      h.ea = 1; h.fa = 1
+    return
+
+
+  '20 length': (i) ->
+    while i--
+      h = {}
+      h.a = 1; h.b = 1; h.c = 1; h.d = 1; h.e = 1; h.f = 1; h.g = 1
+      h.h = 1; h.i = 1; h.j = 1; h.aa = 1; h.ba = 1; h.ca = 1; h.da = 1
+      h.ea = 1; h.fa = 1; h.ga = 1; h.ha = 1; h.ia = 1; h.ja = 1
+    return
+
+
+  '40 length': (i) ->
+    while i--
+      h = {}
+      h.a = 1; h.b = 1; h.c = 1; h.d = 1; h.e = 1; h.f = 1; h.g = 1
+      h.h = 1; h.i = 1; h.j = 1; h.aa = 1; h.ba = 1; h.ca = 1; h.da = 1
+      h.ea = 1; h.fa = 1; h.ga = 1; h.ha = 1; h.ia = 1; h.ja = 1; h.ab = 1
+      h.bb = 1; h.cb = 1; h.db = 1; h.eb = 1; h.fb = 1; h.gb = 1; h.hb = 1
+      h.ib = 1; h.jb = 1; h.ac = 1; h.bc = 1; h.cc = 1; h.dc = 1; h.ec = 1
+      h.fc = 1; h.gc = 1; h.hc = 1; h.ic = 1; h.jc = 1
     return
