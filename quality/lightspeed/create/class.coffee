@@ -41,6 +41,10 @@ lightspeed 'length'
 # the upper constructor - therefore with five-length inheritance there
 # are 5 constructor invocations.
 #
+# Whenever I inherit without needing to recursivelly call super
+# constructor, I'll get same speed as for creating a class without 
+# any inheritance.
+#
 lightspeed 'inheritance'
 
   ' 1 length': (i) ->
