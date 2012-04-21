@@ -42,7 +42,7 @@ return array =
   # @return          {*}
   #
   erase_cst: (arr, selector) ->
-    i = array.indexOf(arr, selector)
+    i = array.index_of(arr, selector)
     
     return arr.splice(i, 1)[0] if i isnt -1
     return undefined
@@ -80,7 +80,7 @@ return array =
   # @param arr       {Array}
   # @param selector  {(*) -> Boolean}
   #
-  indexOf: (arr, selector) ->
+  index_of: (arr, selector) ->
     i = -1
     l = arr.length
 
@@ -95,7 +95,7 @@ return array =
   # @param arr       {Array}
   # @param selector  {(*) -> Boolean}
   #
-  lastIndexOf: (arr, selector) ->
+  last_index_of: (arr, selector) ->
     l = arr.length
 
     return l while l-- when selector(arr[l])
