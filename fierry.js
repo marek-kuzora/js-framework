@@ -23,21 +23,21 @@ var F = (function() {
   
 
   // Associative array storing modules definitions.
-  F._modules_def = {};
+  F.modules_def_ = {};
 
-  // Associative array storing 'class modules' public API.  
-  F._class_cache = {};
+  // Associative array storing 'static modules' public API.  
+  F.static_cache_ = {};
 
   // Associative array storing 'other modules' public API.
-  F._modules_cache;
+  F.modules_cache_;
 
   // Regex for validating the reserved namespace prefix.
-  F._reserved_ns_prefix = /^\?!/;
+  F.reserved_ns_prefix_ = /^\?!/;
 
   // Global time counter. Used to determine if cached modules are 
   // up-to-date. Important events will increment the counter and 
   // mark all modules for reload.
-  F._global_time = 0;
+  F.global_time_ = 0;
 
 
   /**
@@ -51,40 +51,39 @@ var F = (function() {
   F.register_module = function(name, module) {
     
     // Assert that module name doesn't start with '?!'.
-    if(F._reserved_ns_prefix.test(name)) {
+    if(F.reserved_ns_prefix_.test(name)) {
       throw new Error('Module name is required not to start with "?!".');
     }
 
     // Register the module.
-    F._modules_def[name] = module;
+    F.modules_def_[name] = module;
   };
 
 
   // Initial time for module not yet loaded.
-  F._module_unloaded_time = -1;
+  F.module_unloaded_time_ = -1;
 
 
   /**
-   * Return accessor for the module. Accessor is a function that, when
-   * invoked will execute return the module public API. Module will be
-   * lazily executed when the accessor is first invoked.
+   * Return accessor for the statefull module. Accessor is a function
+   * that, when invoked will execute return the module public API.
+   * Module will be lazily executed when the accessor is first invoked.
    *
    * @param name  {String}    module name.
    * @return      {function}  module accessor.
    */
   F.require = function(name) {
-    var module, time = F._module_unloaded_time;
+    var module, time = F.module_unloaded_time_;
 
     return function() {
       
       // Check if module is not up-to-date.
-      if(time < F._global_time) {
-
+      if(time < F.global_time_) {
         // Update copy of the global time counter.
-        time = F._global_time;
+        time = F.global_time_;
 
         // Reload the module from cache.
-        module = F._hard_require(F._modules_cache, name);
+        module = F.hard_require_(F.modules_cache_, name);
       }
       return module;
     };
@@ -92,8 +91,9 @@ var F = (function() {
 
 
   /**
-   * Returns module public API that should contain class definition.
-   * The module will be executed if it has never been crequired. 
+   * Returns public API for the stateless module (e.g. class
+   * definition, set of functions). The module will be executed 
+   * if it has never been required.
    *
    * Note that this function maintains its own cache mechanism for
    * storing already executed modules. Therefore a single module
@@ -103,8 +103,8 @@ var F = (function() {
    * @param name  {String}  module name.
    * @return      {*}       module public API.
    */
-  F.crequire = function(name) {
-    return F._hard_require(F._class_cache, name);
+  F.srequire = function(name) {
+    return F.hard_require_(F.static_cache_, name);
   };
 
 
@@ -122,13 +122,13 @@ var F = (function() {
 
 
   // Substitute for module being evaluated.
-  F._evaluated_module = new Object();
+  F.evaluated_module_ = new Object();
 
   // Substitute for module with undefined public API.
-  F._undefined_module = new Object();
+  F.undefined_module_ = new Object();
   
   // Substitute for module with null public API.
-  F._null_module = new Object();
+  F.null_module_ = new Object();
 
 
   /**
@@ -140,51 +140,51 @@ var F = (function() {
    * @param name  {String}  module name.
    * @return      {*}
    */
-  F._hard_require = function(cache, name) {
+  F.hard_require_ = function(cache, name) {
     
-    // {@performance} Local copy of module public API.
+    // Local copy of module public API.
     var module = cache[name];
 
     // Check if module was executed & returns its public API.
     if(module !== undefined) {
 
       // Fail if required module is currently being evaluated.
-      if(module === F._evaluated_module) {
+      if(module === F.evaluated_module_) {
         throw new Error('Cyclic dependency when requiring: ' + name);
       }
 
       // Return undefined if substitute for undefined was found.
-      if(module === F._undefined_module) {
+      if(module === F.undefined_module_) {
         return undefined;
       }
 
       // Return null if substitute for null was found.
-      if(module === F._null_module) {
+      if(module === F.null_module_) {
         return null;
       }
-
+      //console.log(name, module)    
       return module;
     }
 
     // Check if module function exists.
-    if(!F._modules_def[name]) {
+    if(!F.modules_def_[name]) {
       throw new Error('Module not found: ' + name);
     }
     
     // Mark that module is currently being evaluated.
-    cache[name] = F._evaluated_module;
+    cache[name] = F.evaluated_module_;
 
     // Execute module & caches its public API.
-    cache[name] = F._modules_def[name]();
+    cache[name] = F.modules_def_[name]();
 
     // Replace undefined API with a temporary substitute. 
     if(cache[name] === undefined) {
-      return cache[name] = F._undefined_module;
+      return cache[name] = F.undefined_module_;
     }
 
     // Replace null API with a temporary substitute. 
     if(cache[name] === null) {
-      return cache[name] = F._null_module;
+      return cache[name] = F.null_module_;
     }
 
     return cache[name];
@@ -211,10 +211,10 @@ var F = (function() {
 
   // Hierarchy Scopes stack. Each scope represents an associative
   // array storing 'other modules' public API.
-  F._hierarchy_scopes = [{}];
+  F.hierarchy_scopes_ = [{}];
 
-  // {@performance} Update copy of the latest hierarchy scope.
-  F._modules_cache = F._hierarchy_scopes[0];
+  // Update copy of the latest hierarchy scope.
+  F.modules_cache_ = F.hierarchy_scopes_[0];
 
 
   /**
@@ -228,13 +228,13 @@ var F = (function() {
    * application.
    */
   F.push_scope = function() {
-    F._hierarchy_scopes.push({});
+    F.hierarchy_scopes_.push({});
 
-    // {@performance} Update copy of the latest hierarchy scope.
-    F._modules_cache = F._hierarchy_scopes[F._hierarchy_scopes.length - 1];
+    // Update copy of the latest hierarchy scope.
+    F.modules_cache_ = F.hierarchy_scopes_[F.hierarchy_scopes_.length - 1];
 
     // Increment global time counter.
-    F._global_time++;
+    F.global_time_++;
   };
 
 
@@ -248,15 +248,15 @@ var F = (function() {
   F.pop_scope = function() {
 
     // Assert that there is more than one hierarchy scope.
-    if(F._hierarchy_scopes.length === 1) {
+    if(F.hierarchy_scopes_.length === 1) {
       throw new Error("Cannot discard the application modules cache.");
     }
   
     // Remove top scope from the stack.
-    F._hierarchy_scopes.pop();
+    F.hierarchy_scopes_.pop();
 
     // Retrieve the global variables cache.
-    var globals = F.get_hierarchy_cache(F._globals_cache_key);
+    var globals = F.get_hierarchy_cache(F.globals_cache_key_);
 
     // Restore global variables.
     for(var name in globals) {
@@ -264,19 +264,19 @@ var F = (function() {
     }
     
     // Cleanup each removed module if able.
-    for (var name in F._modules_cache) {
-      var module = F._modules_cache[name];
+    for (var name in F.modules_cache_) {
+      var module = F.modules_cache_[name];
 
       if(module && typeof module.__cleanup__ === 'function') {
         module.__cleanup__()
       }
     }
 
-    // {@performance} Update copy of the latest hierarchy scope.
-    F._modules_cache = F._hierarchy_scopes[F._hierarchy_scopes.length - 1];
+    //  Update copy of the latest hierarchy scope.
+    F.modules_cache_ = F.hierarchy_scopes_[F.hierarchy_scopes_.length - 1];
 
     // Increment global time counter.
-    F._global_time++;    
+    F.global_time_++;    
   };
 
 
@@ -292,10 +292,10 @@ var F = (function() {
     var arr = [];
 
     // Traverse through cache and push all modules into the array.
-    for(var name in F._modules_cache) {
+    for(var name in F.modules_cache_) {
 
       // Skip modules that are being currently processed.
-      if(F._modules_cache[name] !== -1) {
+      if(F.modules_cache_[name] !== -1) {
         arr.push(name);
       }
     }
@@ -317,18 +317,18 @@ var F = (function() {
   F.replace_module = function(name, module) {
     
     // Assert that module name doesn't start with '?!'.
-    if(F._reserved_ns_prefix.test(name)) {
+    if(F.reserved_ns_prefix_.test(name)) {
       throw new Error('Module name is required not to start with "?!".');
     }
 
     // Save module old API into a local variable.
-    var old = F._modules_cache[name];
+    var old = F.modules_cache_[name];
 
     // Replace module with a new API.
-    F._modules_cache[name] = module;
+    F.modules_cache_[name] = module;
     
     // Increment global time counter.
-    F._global_time++;
+    F.global_time_++;
 
     return old;
   };
@@ -347,16 +347,16 @@ var F = (function() {
   F.get_hierarchy_cache = function(ns) {
     
     // Assert that ns does starts with '?!'
-    if(!F._reserved_ns_prefix.test(ns)) {
+    if(!F.reserved_ns_prefix_.test(ns)) {
       throw new Error('Namespace is required to start with "?!".');
     }
 
     // Create cache if it doesn't exist.
-    if(!(ns in F._modules_cache)) {
-      F._modules_cache[ns] = {};
+    if(!(ns in F.modules_cache_)) {
+      F.modules_cache_[ns] = {};
     }
 
-    return F._modules_cache[ns];
+    return F.modules_cache_[ns];
   };
 
 
@@ -373,7 +373,7 @@ var F = (function() {
 
 
   // Copy existing F in case of overwrite.
-  var _F = window.F;
+  var F_ = window.F;
 
 
   /**
@@ -389,7 +389,7 @@ var F = (function() {
     if ( window.F === F ) {
 
       // Replace global F with previous version of F.
-      window.F = _F;
+      window.F = F_;
     }
 
     // Return fierry.js F reference to a client.
@@ -398,8 +398,7 @@ var F = (function() {
 
 
   // Key for retrieving global variables cache.
-  F._globals_cache_key = '?!globals';
-
+  F.globals_cache_key_ = '?!globals';
 
   /**
    * Saves variable into the global scope under the given name. Copies
@@ -415,7 +414,7 @@ var F = (function() {
   F.set_global = function(name, variable) {
 
     // Retrieve the global variables cache.
-    var globals = F.get_hierarchy_cache(F._globals_cache_key);
+    var globals = F.get_hierarchy_cache(F.globals_cache_key_);
 
     // Assert that variable is not set within current hierarchy scope.
     if(name in globals) {
@@ -443,7 +442,7 @@ var F = (function() {
   F.unset_global = function(name) {
 
     // Retrieve the global variables cache.
-    var globals = F.get_hierarchy_cache(F._globals_cache_key);
+    var globals = F.get_hierarchy_cache(F.globals_cache_key_);
     
     // Assert that variable is set within current hierarchy scope.
     if(!(name in globals)) {
@@ -475,7 +474,7 @@ var F = (function() {
 
 
   // Associative array storing scope-independent simple caches.
-  F._global_cache = {};
+  F.global_cache_ = {};
 
 
   /**
@@ -489,10 +488,10 @@ var F = (function() {
   F.get_global_cache = function(ns) {
 
     // Create cache if it doesn't exist.
-    if(!(ns in F._storage_cache)) {
-      F._storage_cache[ns] = {};
+    if(!(ns in F.storage_cache_)) {
+      F.storage_cache_[ns] = {};
     }
-    return F._storage_cache[ns];
+    return F.storage_cache_[ns];
   };
 
 
