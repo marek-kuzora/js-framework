@@ -4,6 +4,10 @@
  * Copyright 2012, Marek Kuzora.
  */
 
+// Forcing strict mode.
+"use strict";
+
+
 
 var F = (function() {
   
@@ -308,7 +312,6 @@ var F = (function() {
    * API or undefined if no API existed or module hasn't been invoked.
    * Module name is required not to start with "?!" as it is a
    * reserved prefix for scope-dependent cache mechanism.
-
    *
    * @param name  {String}  module name.
    * @param api   {*}       new module API.
@@ -488,12 +491,107 @@ var F = (function() {
   F.get_global_cache = function(ns) {
 
     // Create cache if it doesn't exist.
-    if(!(ns in F.storage_cache_)) {
-      F.storage_cache_[ns] = {};
+    if(!(ns in F.global_cache_)) {
+      F.global_cache_[ns] = {};
     }
-    return F.storage_cache_[ns];
+    return F.global_cache_[ns];
   };
 
+
+
+  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+   *
+   * Object identification mechanism. Enables client to stamp objects
+   * witemh unique ID.
+   *
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+  // Uid global sequence. Starts with 1 as 0 evaluates to false when
+  // forced to act as a Boolean.
+  F.uid_sequence_ = 1;
+
+
+  /**
+   * Stamps an object with an unique int identificator.
+   *
+   * @param o  {Object}
+   */
+  F.uid = function(o) {
+
+    // Throw an error, the argument is not an object.
+    if(!(o instanceof Object)) {
+      throw new Error("Can't retrieve UID from a primitive.");
+    }
+
+    if(!o.__uid__) {
+      o.__uid__ = ++F.uid_sequence_;
+    }
+    return o.__uid__;
+  };
+
+
+
+  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+   *
+   * Object tagging mechanism. Enables client to attach any number 
+   * of labels to any kind of object (e.g: hash, function, array) 
+   * via tag() method, and to distinguish objects by their labels 
+   * using is() method.
+   *
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+  /**
+   * Tags the given object with any number of labels. This function
+   * accepts variable argument list where all arguments are {String}
+   * labels except last {Object} object to tag. It returns the 
+   * provided tagged object.
+   *
+   * @param label   {String...}
+   * @param object  {Object}
+   * @return        {Object}
+   */
+  F.tag = function() {
+    var last   = arguments.length - 1,
+        object = arguments[last];
+
+    // Set labels directly when object was not tagged yet.
+    if(!object.__tag__) {
+      
+      // Optimization when there is only one label to tag.
+      if(last === 1) {
+        object.__tag__ = [arguments[0]];
+
+      // TODO slice or concat would be faster? Or mayby direct push??
+      } else {
+        object.__tag__ = Array.prototype.slice.call(arguments, 0, last);
+      }
+
+    // Push additional labels into the object's tag property.
+    } else {
+      for(var i = 0, l = arguments.length - 1; i < l; i++) {
+        object.__tag__.push(arguments[i]);
+      }
+    }
+
+    // Return the given object to the client.
+    return object;
+  };
+
+
+  /**
+   * Returns true if the object contains the given label as its tag.
+   *
+   * @param label   {String}
+   * @param object  {Object}
+   * @return        {Boolean}
+   */
+  F.is = function(label, object) {
+    return object.__tag__ ? object.__tag__.indexOf(label) !== -1 : false;
+  };
 
 
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -513,7 +611,7 @@ var F = (function() {
    * @return   {Boolean}
    */
   F.is_boolean = function(o) {
-    return typeof o === 'boolean' || (o && o.toString() === '[object Boolean]');
+    return typeof o === 'boolean' || o instanceof Boolean
   };
 
 
@@ -524,7 +622,7 @@ var F = (function() {
    * @return   {Boolean} 
    */
   F.is_number = function(o) {
-    return typeof o === 'number' || (o && o.toString() === '[object Number]');
+    return typeof o === 'number' || o instanceof Number
   };
 
 
@@ -535,7 +633,7 @@ var F = (function() {
    * @return   {Boolean}
    */
   F.is_string = function(o) {
-    return typeof o === 'string' || (o && o.toString() === '[object String]');  
+    return typeof o === 'string' || o instanceof String
   };
 
 
@@ -546,7 +644,7 @@ var F = (function() {
    * @return   {Boolean}
    */
   F.is_function = function(o) {
-    return typeof o === 'function' || (o && o.toString() === '[object Function]');
+    return typeof o === 'function' || o instanceof Function
   };
 
 
@@ -557,42 +655,7 @@ var F = (function() {
    * @return   {Boolean}
    */
   F.is_array = function(o) {
-    return Array.isArray(o);
-  };
-
-
-  /**
-   * Returns true if argument is an unspecified object. Please note
-   * that this method is rather slow - use it only if no other
-   * typechecking can be done.
-   *
-   * @param o  {*}
-   * @return   {Boolean}
-   */
-  F.is_object = function(o) {
-    return typeof o === 'number' || (o && o.toString() === '[object Object]');
-  };
-
-
-  /**
-   * Returns true if argument is a date object.
-   *
-   * @param o  {*}
-   * @return   {Boolean}
-   */
-  F.is_date = function(o) {
-    return o instanceof Date;
-  };
-
-
-  /**
-   * Returns true if argument is a regexp object.
-   *
-   * @param o  {*}
-   * @return   {Boolean}
-   */
-  F.is_regexp = function(o) {
-    return o instanceof RegExp;
+    return o instanceof Array
   };
 
 
@@ -606,22 +669,83 @@ var F = (function() {
 
 
   /**
-   * Returns randomly generated number. If the max argument is
-   * specified, returns integer from <0, max>. Otherwise it returns
-   * float from <0,1> - behaving exactly as Math.random().
-   *
-   * This method is implemented to be extremely fast - therefore the
-   * distribution of generated integers is broken. Maximum value is
-   * very unlikely to be generated.
+   * Returns randomly generated number. If the max argument is given,
+   * returns an integer from <0, max-1> with uniform distribution.
+   * Otherwise it behaves exactly as Math.random() returning float
+   * from <0, 1>.
    *
    * @param max  {Number}  positive integer.
    * @return     {Number}
    */
   F.random = function(max) {
-    return max ? Math.random() * max << 0 : Math.random();
+    return max ? ~~(Math.random() * max) : Math.random();
+  };
+
+
+  F.ops_per_ms = function() {
+    var sum = 0
+    for(var i = 0, l = arguments.length; i < l; i++) {
+      sum += 1 / (arguments[i] * 1000)
+    }
+    return 1 / sum / 1000
   };
 
 
   return F;
 
 })();
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * Extending RegExp object.
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+/**
+ * Quotes the given string. Escapes all special characters with proper
+ * backslashes for string to match literally the given string. 
+ *
+ * @param str  {String}
+ * @return     {String}
+ */
+RegExp.quote = function(str) {
+  return str.replace(/([.?*+^$[\]\\(){}-])/g, '\\$1');
+};
+
+
+
+/**
+ * A convinience layer for executing the requestAnimationFrame() in
+ * different browsers.
+ */
+window.requestAnimationFrame = (function(){
+  return  window.requestAnimationFrame       || 
+          window.webkitRequestAnimationFrame || 
+          window.mozRequestAnimationFrame    || 
+          window.oRequestAnimationFrame      || 
+          window.msRequestAnimationFrame     || 
+          function(callback) {
+            return window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+
+/**
+ * A convinience layer for executing the cancelAnimationFrame() in
+ * different browsers.
+ */
+window.cancelAnimationFrame = (function(){
+  return  window.cancelAnimationFrame       || 
+          window.webkitCancelAnimationFrame || 
+          window.mozCancelAnimationFrame    || 
+          window.oCancelAnimationFrame      || 
+          window.msCancelAnimationFrame     || 
+          function(id) {
+            window.clearTimeout(id);
+          };
+})();
+

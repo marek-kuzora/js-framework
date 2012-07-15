@@ -1,106 +1,66 @@
 #
-# TODO
-# Currently I do have some utils for handling unsorted arrays
-# What I need is to also handle sorted arrays - insert,erase & indexOf.
-# Of cource indexOf for sorted arrays is bsearch, etc.
-return array =
-
-
-
-  # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  #
-  # Utilities for unsorted array manipulation.
-  #
-  # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-
+# Module providing utilities for sorted or unsorted array manipulation
+# as well as some additional utilities for array projection.
+#
+return self =
 
   #
-  # Erases and returns first instance of the given item from the
-  # array. Compares items via '===' - references only. For comparing
-  # other content use erase_cst which takes a selector argument
+  # Removes and returns first instance of the given item from the
+  # array. Compares items via '===' - references only.
   #
-  # @param arr   {Array}
-  # @param item  {*}
+  # @param array  {Array}
+  # @param item   {*}
   #
-  # @return      {*}
+  # @return       {*}
   #
-  erase: (arr, item) ->
-    i = arr.indexOf(item)
+  remove: (array, item) ->
+    i = array.indexOf(item)
     
-    return arr.splice(i, 1)[0] if i isnt -1
+    return array.splice(i, 1)[0] if i isnt -1
     return undefined
 
 
   #
-  # Erases and returns first instance of the given item from the array
-  # using a custom selector.
+  # Removes all instances of the given item from the array. 
+  # Compares items via '===' - references only. For comparing other
+  # content use filter_out() which takes a selector argument. 
+  # Please note that this method iterates backwards, from the last
+  # element to the first.
   #
-  # @param arr       {Array}
+  # @param array  {Array}
+  # @param item   {*}
+  #
+  remove_all: (array, item) ->
+    l = array.length
+    array.splice(l, 1) while l-- when array[l] is item
+
+
+  #
+  # Returns all items that satisfies the given selector.
+  #
+  # @param array     {Array}
   # @param selector  {(*) -> Boolean}
+  # @return          {Array}
   #
-  # @return          {*}
-  #
-  erase_cst: (arr, selector) ->
-    i = array.index_of(arr, selector)
-    
-    return arr.splice(i, 1)[0] if i isnt -1
-    return undefined
+  filter: (array, selector) ->
+    return array.filter(selector)
 
 
   #
-  # Erases all instances of the given item from the array. Compares
-  # items via '===' - references only. For comparing other content 
-  # use erase_cst which takes a selector argument.
-  #
-  # @param arr   {Array}
-  # @param item  {*}
-  #
-  erase_all: (arr, item) ->
-    l = arr.length
-    arr.splice(l, 1) while l-- when arr[l] is item
-        
-
-  #
-  # Erases all instances of the given item from the array using
+  # Removes all references of the given item from the array using
   # a custom selector.
   #
-  # @param arr       {Array}
+  # The selector should return true whenever the given item
+  # matches - that item will be removed. Please note that this
+  # method iterates backwards, from the last element to the first.
+  #
+  # @param array     {Array}
   # @param selector  {(*) -> Boolean}
   #
-  erase_all_cst: (arr, selector) ->
-    l = arr.length
-    arr.splice(l, 1) while l-- when selector(arr[l])
-
-
-  #
-  # Returns the first position of the item matched by the given
-  # selector or -1 if no item was matched.
-  #
-  # @param arr       {Array}
-  # @param selector  {(*) -> Boolean}
-  #
-  index_of: (arr, selector) ->
-    i = -1
-    l = arr.length
-
-    return i while i++ < l when selector(arr[i])
-    return -1
-
-
-  #
-  # Returns the last position of the item matched by the given
-  # selector or -1 if no item was matched.
-  #
-  # @param arr       {Array}
-  # @param selector  {(*) -> Boolean}
-  #
-  last_index_of: (arr, selector) ->
-    l = arr.length
-
-    return l while l-- when selector(arr[l])
-    return -1
-
+  filter_out: (array, selector) ->
+    l = array.length
+    array.splice(l, 1) while l-- when selector(array[l])
+    return
 
   #
   # Shuffles the given array and returns it to the client.
@@ -109,23 +69,16 @@ return array =
   # @return     {Array}
   #
   shuffle: (arr) ->
-    i = arr.length
+    l = ll = arr.length
 
-    while i--
+    while ll--
+      i = F.random(l-1)
+      j = F.random(l-1)
+
       v = arr[i]
-      j = F.random(i)
       arr[i] = arr[j]
       arr[j] = v
     return arr
-
-
-
-  # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  #
-  # Utilities for array projection.
-  #
-  # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
 
 
   #
@@ -152,3 +105,99 @@ return array =
     h = {}
     h[i] = true for i in arr
     return (k for k of h)
+
+
+
+  # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+  #
+  # Utilities for sorted array manipulation.
+  #
+  # * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+  
+  #
+  # Performs binary search on sorted array. Returns index of 
+  # the found key or negative value if key wasn't found. 
+  # Having negative value, one can obtain index where to insert
+  # that key to retain the sorted order: index = -1 * (value+1).
+  #
+  # Compares items via '<' - primitives only. For comparing
+  # other content use bsearch_cst() which takes a selector argument.
+  #
+  # @param arr  {Array}
+  # @param key  {*}
+  # @return     {Number}
+  #
+  bsearch: (arr, key) ->
+    l = 0
+    h = arr.length - 1
+
+    while l <= h
+      mid = l + h >> 1
+      mval = arr[mid]
+
+      if mval < key then l = mid + 1
+      else h = mid - 1
+
+    if mval is key then return mid
+    else return -(l+1)
+
+
+  #
+  # Performs binary search on sorted array. Returns index of 
+  # the found key or negative value if key wasn't found. 
+  # Having negative value, one can obtain index where to insert
+  # that key to retain the sorted order: index = -1 * (value+1).
+  # @see array.bsearch()
+  #
+  # @param Array arr
+  # @param Any key
+  # @param Function fn 
+  #     - comparator, that should return -1 if a < b
+  #
+  bsearch_cst: (arr, key, fn) ->
+    l = 0
+    h = arr.length - 1
+
+    while l <= h
+      mid = l + h >> 1
+      mval = arr[mid]
+
+      if fn(mval, key) < 0 then l = mid + 1
+      else h = mid - 1
+
+    if mval is key then return mid
+    else return -(l+1)
+
+
+  #
+  # Inserts item into the sorted array. Compares items via '<'
+  # - primitives only. For comparing other content use
+  # insert_cst() which takes a selector argument.
+  #
+  # To workaround Chrome bug of native Array.splice() function,
+  # the index is explicitly casted into primitive integer.
+  #
+  # @param arr  {Array}
+  # @param it   {*}
+  #
+  insert: (arr, it) ->
+    i = array.bsearch(arr, it)
+    i = -1 * (i + 1) if i < 0
+    arr.splice(~~i, 0, it)
+
+
+  #
+  # Inserts item into the sorted array using a custom selector.
+  # @see array.insert()
+  #
+  # @param Array arr
+  # @param Any it
+  # @param Function fn 
+  #     - comparator, that should return -1 if a < b
+  #
+  insert_cst: (arr, it, fn) ->
+    i = array.bsearch_cst(arr, it, fn)
+    i = -1 * (i + 1) if i < 0
+    arr.splice(~~i, 0, it)

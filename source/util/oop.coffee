@@ -17,4 +17,3 @@ return oop =
   install: (object, properties) ->
     object[k] = v for k,v of properties
     return object
-
