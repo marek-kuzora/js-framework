@@ -8,14 +8,29 @@
 
 
 # Load global accessors to test-types.
-F.run 'fest/lightspeed/type'
 F.run 'fest/performance/type'
 
 
 
-# Load root files for test-types tests registration.
-F.run 'fierry-qa/lightspeed'
-F.run 'fierry-qa/performance'
+# Load main groups for performance testing.
+F.run 'fierry-qa/performance/array'
+F.run 'fierry-qa/performance/class'
+F.run 'fierry-qa/performance/function'
+F.run 'fierry-qa/performance/object'
+F.run 'fierry-qa/performance/set'
+F.run 'fierry-qa/performance/string'
+
+F.run 'fierry-qa/performance/date'
+F.run 'fierry-qa/performance/execute'
+F.run 'fierry-qa/performance/fierry'
+F.run 'fierry-qa/performance/math'
+F.run 'fierry-qa/performance/primitives'
+
+F.run 'fierry-qa/performance/draft'
+
+F.run 'fierry-qa/performance/emitter'
+F.run 'fierry-qa/performance/model'
+F.run 'fierry-qa/performance/view'
 
 
 
