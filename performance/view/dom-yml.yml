@@ -1,6 +1,6 @@
 behaviors:
   pfc/dom:
-    location: fierry-qa/performance/view/dom-resource
+    location: fierry-pfc/view/dom-resource
     conflict: false
 
 actions:

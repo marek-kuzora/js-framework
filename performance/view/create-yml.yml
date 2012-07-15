@@ -1,6 +1,6 @@
 behaviors:
   pfc/dummy:
-    location: fierry-qa/performance/view/create-resource
+    location: fierry-pfc/view/create-resource
     conflict: false
 
 actions:
