@@ -13,24 +13,24 @@ F.run 'fest/performance/type'
 
 
 # Load main groups for performance testing.
-F.run 'fierry-qa/performance/array'
-F.run 'fierry-qa/performance/class'
-F.run 'fierry-qa/performance/function'
-F.run 'fierry-qa/performance/object'
-F.run 'fierry-qa/performance/set'
-F.run 'fierry-qa/performance/string'
+F.run 'fierry-pfc/array'
+F.run 'fierry-pfc/class'
+F.run 'fierry-pfc/function'
+F.run 'fierry-pfc/object'
+F.run 'fierry-pfc/set'
+F.run 'fierry-pfc/string'
 
-F.run 'fierry-qa/performance/date'
-F.run 'fierry-qa/performance/execute'
-F.run 'fierry-qa/performance/fierry'
-F.run 'fierry-qa/performance/math'
-F.run 'fierry-qa/performance/primitives'
+F.run 'fierry-pfc/date'
+F.run 'fierry-pfc/execute'
+F.run 'fierry-pfc/fierry'
+F.run 'fierry-pfc/math'
+F.run 'fierry-pfc/primitives'
 
-F.run 'fierry-qa/performance/draft'
+F.run 'fierry-pfc/draft'
 
-F.run 'fierry-qa/performance/emitter'
-F.run 'fierry-qa/performance/model'
-F.run 'fierry-qa/performance/view'
+F.run 'fierry-pfc/emitter'
+F.run 'fierry-pfc/model'
+F.run 'fierry-pfc/view'
 
 
 
