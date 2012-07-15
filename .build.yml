@@ -5,8 +5,8 @@ projects:
     source: source
 
   fierry-qa:
-    main:   quality/app.coffee
-    source: quality
+    main:   performance/app.coffee
+    source: performance
     dependences:
       - fierry
       - [fest, ../quality]
