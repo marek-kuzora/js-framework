@@ -30,3 +30,9 @@ return class BNode
 
   has_right_child: ->
     return @right isnt null and @left is null
+
+
+  for_each: (fn) ->
+    @left.for_each(fn) if @left
+    fn(@)
+    @right.for_each(fn) if @right

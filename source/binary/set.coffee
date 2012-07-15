@@ -6,18 +6,21 @@
 #
 
 
+UID_KEY = (value) -> F.uid(value)
+
 
 return class BSet
 
-  constructor: ->
+  constructor: (@get_key_) ->
     @length = 0
     
     @array_ = []
     @maximum_ = 0
+    @get_key_ ?= UID_KEY
 
 
   add: (value) ->
-    key = F.uid(value)
+    key = @get_key_(value)
 
     # Push the element if key is outside the maximum range.
     if key > @maximum_
@@ -55,7 +58,7 @@ return class BSet
 
 
   contains: (value) ->
-    key = F.uid(value)
+    key = @get_key_(value)
 
     # Returns false if the key is outside the maximum range.
     return false if key > @maximum_
@@ -79,8 +82,13 @@ return class BSet
     return new InOrderIterator(@array_)
 
 
+  for_each: (fn) ->
+    tree.for_each(fn) for tree in @array_
+    return
+
+
   remove: (value) ->
-    key = F.uid(value)
+    key = @get_key_(value)
 
     # Return if the key is outside the maximum range.
     return false if key > @maximum_

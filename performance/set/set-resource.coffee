@@ -28,4 +28,6 @@ return self =
 
   iterate: (set, sorted) ->
     it = set.iterator(sorted)
+
     v while v = it.next()
+    return
