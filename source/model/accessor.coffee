@@ -22,8 +22,9 @@ return class Accessor extends Emitter
   # be undefined.
   #
   constructor: (@type_, @value_, @parent_, @world_ = @) ->
+    super()
+
     @curr_  = []
-    @prev_  = []
     @counter_ = 0
 
     # Handling complex types.
@@ -68,17 +69,7 @@ return class Accessor extends Emitter
   set: (value) =>
     @value_ = value
     @model_ = undefined
-
     @fire_change()
-
-
-  fire_change: ->
-    @prev_ = @prev_.concat(@curr_)
-    @curr_ = []
-
-    @counter_++
-    notifier().register(@) if not @emitter_disabled_
-
     
 
   #
@@ -126,6 +117,14 @@ return class Accessor extends Emitter
     return acc.get
 
 
+  fire_change: ->
+    super()
+    a.fire_change() for a in @curr_
+
+    @curr_ = []
+    @counter_++
+
+
   #
   # Notifies the subscribed listeners and the child accessors that 
   # a change occured. For performance reasons, this emitter will not
@@ -136,5 +135,3 @@ return class Accessor extends Emitter
   #
   notify: (visited) ->
     super(visited)
-    a.notify(visited) for a in @prev_
-    @prev_ = []

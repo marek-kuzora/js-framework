@@ -1,11 +1,7 @@
 #
-# Counter indicating how often a scheduler.try_halt() should be run
-# with a reasonable performance loss. 1x Date.now(), main component 
-# in scheduler.try_halt() operation, is equal to 8x of empty function.
-# Running 1x scheduler.try_halt() per 100x of functions, the notifier
-# will be up to 10% slower than without running the scheduler.
+# @require:
+#   BSet: fierry/binary/set
 #
-RUNS_COUNT = 100
 
 
 
@@ -18,20 +14,16 @@ class Notifier
 
   constructor: ->
     @queue_ = []
-    @timer_ = setInterval(@run, 15)
+    @frame_ = requestAnimationFrame(@animate_frame_)
 
 
   __cleanup__: ->
-    clearInterval(@timer_)
+    cancelAnimationFrame(@frame_)
 
 
-  #
-  # Registers emitter for scheduled notification.
-  #
-  # @param e  {Emitter}
-  #
-  register: (e) ->
-    @queue_.push(e) if not (e in @queue_)
+  animate_frame_: =>
+    @frame_ = requestAnimationFrame(@animate_frame_)
+    @run()
 
 
   #
@@ -42,16 +34,24 @@ class Notifier
   # its listeners. Once every RUNS_COUNT runs scheduler.try_halt() 
   # to check if the notify does not take too long.
   #
-  run: =>
+  run: ->
     while @queue_.length
-      
-      local   = @queue_
+      local = @queue_
       @queue_ = []
 
-      visited = []
-      emitter.notify(visited) for emitter in local
+      visited = new BSet()
+      emitter.notify(visited) for emitter, i in local
 
     return
+
+
+  #
+  # Registers emitter for scheduled notification.
+  #
+  # @param e  {Emitter}
+  #
+  register: (e) ->
+    @queue_.push(e)
 
 
 

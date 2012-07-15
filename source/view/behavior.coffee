@@ -10,8 +10,3 @@ return class Behavior
   finalize: ->
 
   dispose: ->
-
-  get_behavior: -> null
-
-  get_cached_behavior: (type) ->
-    return @_bcache[type] ?= @get_behavior(type)

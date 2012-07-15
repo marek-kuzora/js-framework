@@ -12,10 +12,10 @@ return class View
 
 
   run: (world, nodes_ = @nodes_) ->
-    n = -> nodes_.call(@, world)
+    n = (arr) -> nodes_.call(@, world, arr)
     a = new Action(@type_, 0, null, @behavior_, (->), n)
     return nodes.execute(a)
 
 
   use: (world, parent) ->
-    return @nodes_.call(parent, world)
+    return @nodes_.call(parent, world, [])

@@ -129,13 +129,13 @@ return self =
   # @param key  {*}
   # @return     {Number}
   #
-  bsearch: (arr, key) ->
+  bsearch: (array, key) ->
     l = 0
-    h = arr.length - 1
+    h = array.length - 1
 
     while l <= h
       mid = l + h >> 1
-      mval = arr[mid]
+      mval = array[mid]
 
       if mval < key then l = mid + 1
       else h = mid - 1
@@ -145,24 +145,24 @@ return self =
 
 
   #
-  # Performs binary search on sorted array. Returns index of 
+  # Performs binary search on sorted arrayay. Returns index of 
   # the found key or negative value if key wasn't found. 
   # Having negative value, one can obtain index where to insert
   # that key to retain the sorted order: index = -1 * (value+1).
-  # @see array.bsearch()
+  # @see arrayay.bsearch()
   #
-  # @param Array arr
+  # @param Array array
   # @param Any key
   # @param Function fn 
   #     - comparator, that should return -1 if a < b
   #
-  bsearch_cst: (arr, key, fn) ->
+  bsearch_cst: (array, key, fn) ->
     l = 0
-    h = arr.length - 1
+    h = array.length - 1
 
     while l <= h
       mid = l + h >> 1
-      mval = arr[mid]
+      mval = array[mid]
 
       if fn(mval, key) < 0 then l = mid + 1
       else h = mid - 1
@@ -182,22 +182,22 @@ return self =
   # @param arr  {Array}
   # @param it   {*}
   #
-  insert: (arr, it) ->
-    i = array.bsearch(arr, it)
+  insert: (array, it) ->
+    i = self.bsearch(array, it)
     i = -1 * (i + 1) if i < 0
-    arr.splice(~~i, 0, it)
+    array.splice(~~i, 0, it)
 
 
   #
-  # Inserts item into the sorted array using a custom selector.
-  # @see array.insert()
+  # Inserts item into the sorted arrayay using a custom selector.
+  # @see arrayay.insert()
   #
-  # @param Array arr
+  # @param Array array
   # @param Any it
   # @param Function fn 
   #     - comparator, that should return -1 if a < b
   #
-  insert_cst: (arr, it, fn) ->
-    i = array.bsearch_cst(arr, it, fn)
+  insert_cst: (array, it, fn) ->
+    i = self.bsearch_cst(array, it, fn)
     i = -1 * (i + 1) if i < 0
-    arr.splice(~~i, 0, it)
+    array.splice(~~i, 0, it)

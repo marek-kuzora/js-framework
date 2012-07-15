@@ -10,6 +10,7 @@
 return class Reference extends Emitter
 
   constructor: (@pointer_, @value_, @parent_) ->
+    super()
     
 
   get: =>

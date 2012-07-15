@@ -1,6 +1,6 @@
 #
 # @require:
-#   Emitter:  fierry/emitter_2/emitter
+#   Emitter:  fierry/emitter/emitter
 #
 
 

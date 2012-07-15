@@ -9,4 +9,4 @@ projects:
     source: performance
     dependences:
       - fierry
-      - [fest, ../quality]
+      - [fest, ../fest]

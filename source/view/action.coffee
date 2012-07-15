@@ -3,7 +3,7 @@
 #   array: fierry/util/array.
 #   nodes: fierry/view/nodes.
 #
-#   Subscriber: fierry/emitter/subscriber
+#   tracker: fierry/emitter/tracker
 #
 
 
@@ -32,18 +32,11 @@ return class Action
     # 2.5 times slower. Don't know why, dont care (?)
     @parent.attach(@) if @parent and @parent.finalized
 
-    # Chrome optimalization bug. The following lines makes view
-    # 5-7 times faster than running "@update_ = => @update()" 
-    # which yields exactly the same results.
-    @update_ = (fn = => @update())
-
-    @tracker_ = new Subscriber(@update_)
-    @tracker_.start_tracking()
+    tracker().push(@)
 
     @value = @value_fn_()
-    @nodes = @nodes_fn_()
+    @nodes = @nodes_fn_([])
 
-    @behavior_ ?= @parent.get_behavior_for(@type)
     @behavior_.create(@)
     @behavior_.update(@)
     return
@@ -52,17 +45,16 @@ return class Action
   finalize: ->
     @behavior_.finalize(@) # Teoretically here tracker should be also activated!
     
-    @tracker_.stop_tracking()
-    @tracker_.subscribe_all()
+    tracker().pop()
 
     @finalized = true
     return @
 
 
-  update: ->
+  notify_change: ->
     return if @disposed
 
-    @tracker_.start_tracking()
+    tracker().push(@)
     @value = @value_fn_()
 
     @behavior_.update(@)
@@ -71,9 +63,12 @@ return class Action
     nodes.dispose(node) for node in old_nodes
     nodes.execute(node) for node in new_nodes
 
-    @tracker_.stop_tracking()
-    @tracker_.subscribe_all()
+    tracker().pop()
     return
+
+
+  notify_access: (e) ->
+    e.subscribe(@)
 
 
   _get_changed_nodes: ->
@@ -83,7 +78,7 @@ return class Action
     a = 0
     b = 0
     arra = @nodes
-    arrb = @nodes_fn_()
+    arrb = @nodes_fn_([])
     
     while a < arra.length and b < arrb.length
       ua = arra[a].uid
@@ -115,7 +110,6 @@ return class Action
     @disposed = true
 
     @behavior_.dispose(@)
-    @tracker_.unsubscribe_all()
 
     nodes.dispose(node) for node in @nodes
     @nodes = []
@@ -127,14 +121,6 @@ return class Action
 
   detach: (child) ->
     array.remove(@nodes, child)
-
-  
-  get_behavior_for: (type) ->
-    behavior = @behavior_.get_cachedbehavior_(type)
-
-    if not behavior
-      throw new Error "Behavior for '#{type}' not found."
-    return behavior
 
 
   # Looks like Array.prototype.filter!

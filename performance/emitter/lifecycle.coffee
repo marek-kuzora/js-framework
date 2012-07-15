@@ -1,10 +1,11 @@
 #
 # @require:
-#   Emitter:    fierry/emitter/emitter
-#   Subscriber: fierry/emitter/subscriber
+#   Emitter:  fierry/emitter/emitter
 #
-#   notifier:   fierry/emitter/notifier
+#   tracker:  fierry/emitter/tracker
+#   notifier: fierry/emitter/notifier
 #
+
 
 
 performance '/emitter.lifecycle'
@@ -23,11 +24,11 @@ performance '1 emitter changed'
     before: -> @listeners = create(1, 0, @data)
     run:   -> test(1, @data)
 
-  '3 subscribe':
+  '3 subscribes':
     before: -> @listeners = create(3, 0, @data)
     run:   -> test(1, @data)
 
-  '5 subscribe':
+  '5 subscribes':
     before: -> @listeners = create(5, 0, @data)
     run:   -> test(1, @data)
 
@@ -39,11 +40,11 @@ performance '3 emitter changed'
     before: -> @listeners = create(1, 0, @data)
     run:   -> test(3, @data)
 
-  '3 subscribe':
+  '3 subscribes':
     before: -> @listeners = create(3, 0, @data)
     run:   -> test(3, @data)
 
-  '5 subscribe':
+  '5 subscribes':
     before: -> @listeners = create(5, 0, @data)
     run:   -> test(3, @data)
 
@@ -55,11 +56,11 @@ performance '5 emitter changed'
     before: -> @listeners = create(1, 0, @data)
     run:   -> test(5, @data)
 
-  '3 subscribe':
+  '3 subscribes':
     before: -> @listeners = create(3, 0, @data)
     run:   -> test(5, @data)
 
-  '5 subscribe':
+  '5 subscribes':
     before: -> @listeners = create(5, 0, @data)
     run:   -> test(5, @data)
 
@@ -75,11 +76,11 @@ performance '1 emitter changed'
     before: -> @listeners = create(0, 1, @data)
     run:   -> test(1, @data)
 
-  '3 subscribe':
+  '3 subscribes':
     before: -> @listeners = create(0, 3, @data)
     run:   -> test(1, @data)
 
-  '5 subscribe':
+  '5 subscribes':
     before: -> @listeners = create(0, 5, @data)
     run:   -> test(1, @data)
 
@@ -91,11 +92,11 @@ performance '3 emitter changed'
     before: -> @listeners = create(0, 1, @data)
     run:   -> test(3, @data)
 
-  '3 subscribe':
+  '3 subscribes':
     before: -> @listeners = create(0, 3, @data)
     run:   -> test(3, @data)
 
-  '5 subscribe':
+  '5 subscribes':
     before: -> @listeners = create(0, 5, @data)
     run:   -> test(3, @data)
 
@@ -107,14 +108,13 @@ performance '5 emitter changed'
     before: -> @listeners = create(0, 1, @data)
     run:   -> test(5, @data)
 
-  '3 subscribe':
+  '3 subscribes':
     before: -> @listeners = create(0, 3, @data)
     run:   -> test(5, @data)
 
-  '5 subscribe':
+  '5 subscribes':
     before: -> @listeners = create(0, 5, @data)
     run:   -> test(5, @data)
-
 
 
 
@@ -127,28 +127,30 @@ class Listener
 
   constructor: (s, @d, @data) ->
     @s = (F.random(EMITTERS) for i in [0...s])
-    @subscr = new Subscriber(@underlying_data_changed)
 
 
-  underlying_data_changed: =>
-    @subscr.start_tracking()
+  notify_change: ->
+    tracker().push(@)
 
     @data[i].fire_access() for i in @s
-    @data[F.random(20)].fire_access() for i in [0...@d]
+    @data[F.random(EMITTERS)].fire_access() for i in [0...@d]
 
-    @subscr.stop_tracking()
-    @subscr.subscribe_all()
+    tracker().pop()
+
+
+  notify_access: (e) ->
+    e.subscribe(@)
 
 
 
 create = (s, d, data) ->
   listeners = (new Listener(s, d, data) for i in [0...LISTENERS])
-  l.underlying_data_changed() for l in listeners
+  l.notify_change() for l in listeners
 
   return listeners
 
 
+
 test = (count, data) ->
-  offset = ~~(EMITTERS / count)
-  data[F.random(offset) + i * offset].fire_change() for i in [0...count]
+  data[F.random(EMITTERS)].fire_change() for i in [0...count]
   notifier().run()

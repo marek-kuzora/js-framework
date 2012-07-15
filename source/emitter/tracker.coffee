@@ -39,8 +39,8 @@ class Tracker
   # @param e  {Emitter}
   #
   track: (e) ->
-    return if not @stack_.length
-    @stack_[@stack_.length - 1].track_data_access(e)
+    if @stack_.length
+      @stack_[@stack_.length - 1].notify_access(e)
 
 
 
