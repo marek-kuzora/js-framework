@@ -18,4 +18,4 @@ return class View
 
 
   use: (world, parent) ->
-    return @nodes_.call(parent, world, [])
+    return @nodes_.call(parent, world, new Array())

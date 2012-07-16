@@ -25,25 +25,27 @@ return class Action
   # the object's initialization performance (by a factor of 2).
   #
   constructor: (@type, @uid, @parent, @behavior_, @value_fn_, @nodes_fn_) ->
+    @value = null
+    @nodes = null
+    @finalized = false
 
   create: ->
 
     # Getting @parent.finalized makes flat representation 
     # 2.5 times slower. Don't know why, dont care (?)
-    @parent.attach(@) if @parent and @parent.finalized
+    #@parent.attach(@) if @parent and @parent.finalized
 
     tracker().push(@)
 
     @value = @value_fn_()
-    @nodes = @nodes_fn_([])
+    @nodes = @nodes_fn_(new Array())
 
     @behavior_.create(@)
     @behavior_.update(@)
-    return
 
 
   finalize: ->
-    @behavior_.finalize(@) # Teoretically here tracker should be also activated!
+    @behavior_.finalize(@)
     
     tracker().pop()
 
@@ -78,7 +80,7 @@ return class Action
     a = 0
     b = 0
     arra = @nodes
-    arrb = @nodes_fn_([])
+    arrb = @nodes_fn_(new Array())
     
     while a < arra.length and b < arrb.length
       ua = arra[a].uid
