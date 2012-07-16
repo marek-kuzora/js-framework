@@ -1,6 +1,5 @@
 #
 # @require:
-#   nodes:  fierry/view/nodes.
 #   Action: fierry/view/action
 #
 
@@ -14,7 +13,7 @@ return class View
   run: (world, nodes_ = @nodes_) ->
     n = (arr) -> nodes_.call(@, world, arr)
     a = new Action(@type_, 0, null, @behavior_, (->), n)
-    return nodes.execute(a)
+    return a.execute()
 
 
   use: (world, parent) ->

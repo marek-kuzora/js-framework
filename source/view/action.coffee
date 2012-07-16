@@ -1,7 +1,6 @@
 #
 # @require:
 #   array: fierry/util/array.
-#   nodes: fierry/view/nodes.
 #
 #   tracker: fierry/emitter/tracker
 #
@@ -29,12 +28,7 @@ return class Action
     @nodes = null
     @finalized = false
 
-  create: ->
-
-    # Getting @parent.finalized makes flat representation 
-    # 2.5 times slower. Don't know why, dont care (?)
-    #@parent.attach(@) if @parent and @parent.finalized
-
+  execute: ->
     tracker().push(@)
 
     @value = @value_fn_()
@@ -43,12 +37,11 @@ return class Action
     @behavior_.create(@)
     @behavior_.update(@)
 
-
-  finalize: ->
+    node.execute() for node in @nodes
+      
     @behavior_.finalize(@)
-    
-    tracker().pop()
 
+    tracker().pop()
     @finalized = true
     return @
 
@@ -62,8 +55,8 @@ return class Action
     @behavior_.update(@)
 
     [old_nodes, new_nodes] = @_get_changed_nodes()
-    nodes.dispose(node) for node in old_nodes
-    nodes.execute(node) for node in new_nodes
+    node.dispose() for node in old_nodes
+    node.execute() for node in new_nodes
 
     tracker().pop()
     return
@@ -113,7 +106,7 @@ return class Action
 
     @behavior_.dispose(@)
 
-    nodes.dispose(node) for node in @nodes
+    node.dispose() for node in @nodes
     @nodes = []
 
 
