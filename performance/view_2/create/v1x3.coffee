@@ -1,7 +1,6 @@
 #
 # @require:
-#   Value:    fierry/view_2/value
-#   Parent:   fierry/view_2/parent
+#   actions:  fierry/view_2/nodes.
 #   Behavior: fierry/view_2/behavior
 #
 
@@ -10,11 +9,11 @@ behavior = new Behavior()
 
 
 nodes = (_) ->
-  _.push new Value(null, this, behavior, -> 1)
-  _.push new Value(null, this, behavior, -> 2)
-  _.push new Value(null, this, behavior, -> 3)
+  _.push new actions.Value(null, this, behavior, -> 1)
+  _.push new actions.Value(null, this, behavior, -> 2)
+  _.push new actions.Value(null, this, behavior, -> 3)
   return _
 
 
 return ->
-  return (new Parent(null, null, behavior, nodes)).execute()
+  return (new actions.Parent(null, null, behavior, nodes)).execute()
