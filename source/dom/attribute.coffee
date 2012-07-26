@@ -7,8 +7,8 @@
 
 class Attribute extends Behavior
 
-  create: ($) ->
-    $.node = $.parent.node
+  create: ($, parent) ->
+    $.node = parent.node
 
   update: ($) ->
     $.node.setAttribute($.type, $.value)

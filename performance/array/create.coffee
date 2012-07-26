@@ -26,6 +26,21 @@ performance 'length'
 
 
 
+performance 'undefined'
+
+  ' 0 length': -> new Array()
+
+
+  ' 5 length': -> new Array(5)
+
+
+  '10 length': -> new Array(10)
+
+
+  '50 length': ->new Array(50)
+
+
+
 #
 # Based on items it contains.
 #

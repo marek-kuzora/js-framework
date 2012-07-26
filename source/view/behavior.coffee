@@ -1,7 +1,6 @@
 return class Behavior
 
   constructor: ->
-    @_bcache = {}
 
   create: ->
 

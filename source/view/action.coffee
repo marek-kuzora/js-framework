@@ -34,11 +34,11 @@ return class Action
     @value = @value_fn_()
     @nodes = @nodes_fn_(new Array())
 
-    @behavior_.create(@)
+    @behavior_.create(@, @parent)
     @behavior_.update(@)
 
     node.execute() for node in @nodes
-      
+
     @behavior_.finalize(@)
 
     tracker().pop()

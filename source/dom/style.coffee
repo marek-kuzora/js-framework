@@ -7,8 +7,8 @@
 
 class Style extends Behavior
 
-  create: ($) ->
-    $.node = $.parent.node
+  create: ($, parent) ->
+    $.node = parent.node
 
   update: ($)->
     $.node.style[$.type] = $.value

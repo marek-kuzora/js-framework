@@ -7,8 +7,8 @@
 
 class Event extends Behavior
 
-  create: ($) ->
-    $.node = $.parent.node
+  create: ($, parent) ->
+    $.node = parent.node
 
   update: ($) ->
     $.node.addEventListener($.value) if $.value

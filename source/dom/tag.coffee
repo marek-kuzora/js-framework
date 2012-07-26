@@ -7,8 +7,8 @@
 
 class Tag extends Behavior
 
-  create: ($) ->
-    $.node = $.parent.node
+  create: ($, parent) ->
+    $.node = parent.node
     $.node.tags ?= {}
 
 

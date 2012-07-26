@@ -8,8 +8,8 @@
 # TODO There is no handling of the standard TextNode elements anywhere...
 class Element extends Behavior
   
-  create: ($) ->
-    $.pnode = $.parent.node
+  create: ($, parent) ->
+    $.pnode = parent.node
     $.node  = document.createElement($.type)
 
 
