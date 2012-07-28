@@ -29,3 +29,13 @@ performance 'previous'
   ' 5 length': -> @view.nodes_[4].prev_sibling(Behavior)
 
   '10 length': -> @view.nodes_[9].prev_sibling(Behavior)
+
+
+
+performance 'last'
+
+  ' 0 length': -> @view.nodes_[0].last_sibling(Behavior)
+
+  ' 5 length': -> @view.nodes_[4].last_sibling(Behavior)
+
+  '10 length': -> @view.nodes_[9].last_sibling(Behavior)

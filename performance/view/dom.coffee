@@ -16,7 +16,7 @@ performance '_3_div'
   'auto':
     before: -> @v = F.srequire(@prefix + 'elems_3')
     run:    -> @v.run()
-    
+
 
 
 performance '_6_div_article'
@@ -28,6 +28,7 @@ performance '_6_div_article'
       n2 = document.createElement('article')
       n1.appendChild(n2)
       n0.appendChild(n1)
+
 
   'auto':
     before: -> @v = F.srequire(@prefix + 'elems_6')

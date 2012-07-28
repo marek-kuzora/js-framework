@@ -7,10 +7,10 @@
 
 return nodes =
 
-
   #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   #                           ABSTRACT
   #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 
   Abstract: class Abstract
@@ -51,7 +51,6 @@ return nodes =
       p = @parent_
 
       loop
-
         if --i <= 0
       
           if p instanceof Parent
@@ -71,15 +70,42 @@ return nodes =
           return n
 
 
+    last_sibling: (b, t) ->
+      p = @parent_
+      i = p.nodes_.length
+
+      loop
+        if --i <= 0
+      
+          if p instanceof Parent
+            return null
+
+          if p instanceof Special
+            i = p.index_
+            p = p.parent_
+
+        n = p.nodes_[i]
+
+        if n instanceof Special
+          p = n
+          i = p.nodes_.length
+
+        else if n isnt @ and n.behavior_ instanceof b and (!t or n.type is t)
+          return n
+
+
+
   #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   #                           PARENT
   #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 
   Parent: class Parent extends Abstract
 
     constructor: (@type, @parent_, @behavior_, @nodes_fn_) ->
       @nodes_ = null
+      @finalized = false
 
 
     execute: ->
@@ -94,12 +120,16 @@ return nodes =
 
       @behavior_.finalize(@)
       tracker().pop()
+
+      @finalized = true
       return @
+
 
 
   #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   #                           VALUE
   #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 
   Value: class Value extends Abstract
@@ -110,20 +140,19 @@ return nodes =
 
     execute: ->
       tracker().push(@)
-
-      if @value_fn_
-        @value = @value_fn_()
-
+        
+      @value = @value_fn_() if @value_fn_
       @behavior_.create(@)
-      @behavior_.finalize(@)
 
       tracker().pop()
       return @
 
 
+
   #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   #                           SPECIAL
   #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 
   Special: class Special extends Abstract
