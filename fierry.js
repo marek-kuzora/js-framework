@@ -33,7 +33,7 @@ var F = (function() {
   F.static_cache_ = {};
 
   // Associative array storing 'other modules' public API.
-  F.modules_cache_;
+  F.dynamic_cache_;
 
   // Regex for validating the reserved namespace prefix.
   F.reserved_ns_prefix_ = /^\?!/;
@@ -67,11 +67,23 @@ var F = (function() {
   // Initial time for module not yet loaded.
   F.module_unloaded_time_ = -1;
 
+  // Counter storing the F.hard_require_() recursion's depth.
+  F.require_depth_ = 0;
+
+  // Array storing pending requires from the executed modules.
+  F.pending_requires_ = [];
+
 
   /**
-   * Return accessor for the statefull module. Accessor is a function
-   * that, when invoked will execute return the module public API.
-   * Module will be lazily executed when the accessor is first invoked.
+   * Performs a dynamic require of a module with the given name.
+   * Return an accessor for the module with an inner state. Accessor 
+   * is a function that, when invoked will execute and return the
+   * module's public API. The module won't be executed until the
+   * accessor is first invoked.
+   *
+   * Please note that dynamic and static requires maintain their own
+   * modules caching mechanism. Therefore a single module should never
+   * be required both by dynamic and static require.
    *
    * @param name  {String}    module name.
    * @return      {function}  module accessor.
@@ -87,7 +99,7 @@ var F = (function() {
         time = F.global_time_;
 
         // Reload the module from cache.
-        module = F.hard_require_(F.modules_cache_, name);
+        module = F.hard_require_(F.dynamic_cache_, name);
       }
       return module;
     };
@@ -95,14 +107,14 @@ var F = (function() {
 
 
   /**
-   * Returns public API for the stateless module (e.g. class
-   * definition, set of functions). The module will be executed 
+   * Performs a static require of a module with the given name.
+   * Returns a public API for the module without an inner state (e.g.
+   * class definition, set of functions). The module will be executed
    * if it has never been required.
    *
-   * Note that this function maintains its own cache mechanism for
-   * storing already executed modules. Therefore a single module
-   * should only be required using one of the provided requiring
-   * methods, never by both.
+   * Please note that dynamic and static requires maintain their own
+   * modules caching mechanism. Therefore a single module should never
+   * be required both by dynamic and static require.
    *
    * @param name  {String}  module name.
    * @return      {*}       module public API.
@@ -113,15 +125,23 @@ var F = (function() {
 
 
   /**
-   * Requires standard module via accessor & immediately accesses it.
-   * Enables clients to run selected modules one time only for their
-   * side effects on the application state.
+   * Requires a module using dynamic require and immediately accesses
+   * it. Enables clients to run selected modules one time only for
+   * their side effects on the application state.
    *
    * @param name  {String}  module name
    * @return      {*}
    */
   F.run = function(name) {
-    return F.require(name)();
+
+    // Decrement the recursion's depth counter.
+    F.require_depth_--;
+
+    // Execute module & retrieve its public API.
+    var module = F.require(name)();
+
+    // Increment the recursion's depth counter.
+    F.require_depth_++; 
   };
 
 
@@ -145,6 +165,7 @@ var F = (function() {
    * @return      {*}
    */
   F.hard_require_ = function(cache, name) {
+    var requires;
     
     // Local copy of module public API.
     var module = cache[name];
@@ -166,7 +187,8 @@ var F = (function() {
       if(module === F.null_module_) {
         return null;
       }
-      //console.log(name, module)    
+
+      // Return the module's public API.
       return module;
     }
 
@@ -174,23 +196,44 @@ var F = (function() {
     if(!F.modules_def_[name]) {
       throw new Error('Module not found: ' + name);
     }
-    
+
+    // Increment the recursion's depth counter.
+    F.require_depth_++;
+ 
     // Mark that module is currently being evaluated.
     cache[name] = F.evaluated_module_;
 
-    // Execute module & caches its public API.
-    cache[name] = F.modules_def_[name]();
+    // Create a hash storing the required modules.
+    F.pending_requires_.push(requires = {});
+
+    // Execute module & cache its public API.
+    cache[name] = F.modules_def_[name](requires);
 
     // Replace undefined API with a temporary substitute. 
     if(cache[name] === undefined) {
-      return cache[name] = F.undefined_module_;
+      cache[name] = F.undefined_module_;
     }
 
     // Replace null API with a temporary substitute. 
     if(cache[name] === null) {
-      return cache[name] = F.null_module_;
+      cache[name] = F.null_module_;
     }
 
+    // Decrement the recursion's depth counter.
+    F.require_depth_--;
+
+    // If it is the top require invocation.
+    if(F.require_depth_ === 0) {
+
+      // Satisfy the pending dependences using static require.
+      while(requires = F.pending_requires_.shift()) {
+        for(var key in requires) {
+          requires[key] = F.srequire(requires[key])
+        }
+      }
+    }
+
+    // Return the module's public API.
     return cache[name];
   };
 
@@ -218,7 +261,7 @@ var F = (function() {
   F.hierarchy_scopes_ = [{}];
 
   // Update copy of the latest hierarchy scope.
-  F.modules_cache_ = F.hierarchy_scopes_[0];
+  F.dynamic_cache_ = F.hierarchy_scopes_[0];
 
 
   /**
@@ -235,7 +278,7 @@ var F = (function() {
     F.hierarchy_scopes_.push({});
 
     // Update copy of the latest hierarchy scope.
-    F.modules_cache_ = F.hierarchy_scopes_[F.hierarchy_scopes_.length - 1];
+    F.dynamic_cache_ = F.hierarchy_scopes_[F.hierarchy_scopes_.length - 1];
 
     // Increment global time counter.
     F.global_time_++;
@@ -268,8 +311,8 @@ var F = (function() {
     }
     
     // Cleanup each removed module if able.
-    for (var name in F.modules_cache_) {
-      var module = F.modules_cache_[name];
+    for (var name in F.dynamic_cache_) {
+      var module = F.dynamic_cache_[name];
 
       if(module && typeof module.__cleanup__ === 'function') {
         module.__cleanup__()
@@ -277,7 +320,7 @@ var F = (function() {
     }
 
     //  Update copy of the latest hierarchy scope.
-    F.modules_cache_ = F.hierarchy_scopes_[F.hierarchy_scopes_.length - 1];
+    F.dynamic_cache_ = F.hierarchy_scopes_[F.hierarchy_scopes_.length - 1];
 
     // Increment global time counter.
     F.global_time_++;    
@@ -296,10 +339,10 @@ var F = (function() {
     var arr = [];
 
     // Traverse through cache and push all modules into the array.
-    for(var name in F.modules_cache_) {
+    for(var name in F.dynamic_cache_) {
 
       // Skip modules that are being currently processed.
-      if(F.modules_cache_[name] !== -1) {
+      if(F.dynamic_cache_[name] !== -1) {
         arr.push(name);
       }
     }
@@ -325,10 +368,10 @@ var F = (function() {
     }
 
     // Save module old API into a local variable.
-    var old = F.modules_cache_[name];
+    var old = F.dynamic_cache_[name];
 
     // Replace module with a new API.
-    F.modules_cache_[name] = module;
+    F.dynamic_cache_[name] = module;
     
     // Increment global time counter.
     F.global_time_++;
@@ -355,11 +398,11 @@ var F = (function() {
     }
 
     // Create cache if it doesn't exist.
-    if(!(ns in F.modules_cache_)) {
-      F.modules_cache_[ns] = {};
+    if(!(ns in F.dynamic_cache_)) {
+      F.dynamic_cache_[ns] = {};
     }
 
-    return F.modules_cache_[ns];
+    return F.dynamic_cache_[ns];
   };
 
 
@@ -748,4 +791,3 @@ window.cancelAnimationFrame = (function(){
             window.clearTimeout(id);
           };
 })();
-
