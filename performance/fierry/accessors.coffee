@@ -13,11 +13,14 @@ performance '/fierry.accessors'
 
   'require': ->  F.require('module.with.api')
 
+
   'srequire': -> F.srequire('module.with.class')
+
 
   'execute -with-api':
     before: -> @module = F.require('module.with.api')
     run:    -> @module()
+
 
   'execute -no-api':  ->
     before: -> @module = F.require('module.with.undefined')

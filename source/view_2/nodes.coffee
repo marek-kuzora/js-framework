@@ -15,10 +15,16 @@ return nodes =
 
   Abstract: class Abstract
 
-    set_index: (@index_) ->
+    parent: ->
+      return @parent_
 
 
-    parent: -> return @parent_
+    is_executing: ->
+      return @index_ isnt null
+
+
+    notify_access: (e) ->
+      e.subscribe(@)
 
 
     next_sibling: (b, t) ->
@@ -104,25 +110,42 @@ return nodes =
   Parent: class Parent extends Abstract
 
     constructor: (@type, @parent_, @behavior_, @nodes_fn_) ->
+      @index_ = null
       @nodes_ = null
-      @finalized = false
+      @disposed_ = null
 
 
-    execute: ->
+    execute: (@index_) ->
       tracker().push(@)
       @behavior_.create(@)
 
       if @nodes_fn_
-
-        for node, i in @nodes_ = @nodes_fn_(new Array())
-          node.set_index(i)
-          node.execute()
+        node.execute(i) for node, i in @nodes_ = @nodes_fn_(new Array())
 
       @behavior_.finalize(@)
       tracker().pop()
-
-      @finalized = true
       return @
+
+
+    dispose: ->
+      return if @disposed_
+
+      node.dispose() for node in @nodes_
+
+      @behavior_.dispose(@)
+      @disposed_ = true
+
+
+    notify_change: ->
+      return if @disposed_
+
+      tracker().push(@)
+
+      if @nodes_fn_
+        node.dispose()  for node in @nodes_
+        node.execute(i) for node, i in @nodes_ = @nodes_fn_(new Array())
+
+      tracker().pop()
 
 
 
@@ -135,10 +158,12 @@ return nodes =
   Value: class Value extends Abstract
 
     constructor: (@type, @parent_, @behavior_, @value_fn_) ->
+      @index_ = null
       @value = null
+      @disposed_ = null
 
 
-    execute: ->
+    execute: (@index_) ->
       tracker().push(@)
         
       @value = @value_fn_() if @value_fn_
@@ -146,6 +171,26 @@ return nodes =
 
       tracker().pop()
       return @
+
+
+    dispose: ->
+      return if @disposed_
+
+      @behavior_.dispose(@)
+      @disposed_ = true
+
+
+    notify_change: ->
+      return if @disposed_
+
+      tracker().push(@)
+
+      @value = @value_fn_() if @value_fn_
+      
+      @behavior_.dispose(@)
+      @behavior_.create(@)
+
+      tracker().pop()
 
 
 
@@ -157,11 +202,118 @@ return nodes =
 
   Special: class Special extends Abstract
 
+    parent: ->
+      return @parent_.parent()
+
+
+
+  #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  #                           GROUP
+  #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+  Group: class Group extends Special
+
+    constructor: (@parent_, @nodes_fn_) ->
+      @index_ = null
+      @nodes_ = null
+      @disposed_ = null
+
+
+    execute: (@index_) ->
+      tracker().push(@)
+
+      if @nodes_fn_
+        for node, i in @nodes_ = @nodes_fn_(new Array())
+          node.execute(i)
+
+      tracker().pop()
+      return @
+
+
+   dispose: ->
+      return if @disposed_
+
+      node.dispose() for node in @nodes_
+      @disposed_ = true
+
+
+    notify_change: ->
+      return if @disposed_
+
+      tracker().push(@)
+
+      if @nodes_fn_
+        node.dispose()  for node in @nodes_
+        node.execute(i) for node, i in @nodes_ = @nodes_fn_(new Array())
+
+      tracker().pop()
+
+
+
+  #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  #                           IF
+  #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
 
   If: class If extends Special
+
+    constructor: (@parent_, @value_fn_, @tnodes_fn_, @fnodes_fn_) ->
+      @index_ = null
+      @value_ = null
+      @nodes_ = null
+      @disposed_ = null
+
+
+    execute: (@index_) ->
+      tracker().push(@)
+
+      @value_ = @value_fn_()
+      @nodes_ = [new Group(@, (if @value_ then @tnodes_fn_ else @fnodes_fn_))]
+      @nodes_[0].execute(0)
+
+      tracker().pop()
+      return @
+
+
+    dispose: ->
+      return if @disposed_
+
+      @nodes_[0].dispose()
+      @disposed_ = true
+    
+
+    notify_change: ->
+      return if @disposed_
+
+      tracker().push(@)
+      value = @value_fn_()
+
+      # If the true/false condition changed
+      if (@value_ and !value) or (!@value_ and value)
+        @nodes_[0].dispose()
+
+        @value_ = value
+        @nodes_ = [new Group(@, (if @value_ then @tnodes_fn_ else @fnodes_fn_))]
+        @nodes_[0].execute(0)
+
+      tracker().pop()
+
+
+
+  #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  #                           FOR
+  #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 
   For: class For extends Special
 
+    constructor: (@parent_, @value_fn_, @nodes_fn_) ->
+      @index_ = null
+      @nodes_ = null
 
-  Group: class Group extends Special
+
+    execute: (@index_) ->

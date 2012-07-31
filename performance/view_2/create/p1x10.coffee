@@ -1,6 +1,6 @@
 #
 # @require:
-#   actions:  fierry/view_2/nodes.
+#   action:   fierry/view_2/nodes.
 #   Behavior: fierry/view_2/behavior
 #
 
@@ -10,19 +10,19 @@ behavior2 = create: (->), finalize: (->), dispose: (->)
 
 
 nodes = (_) ->
-  _.push new actions.Parent(null, this, behavior2)
-  _.push new actions.Parent(null, this, behavior2)
-  _.push new actions.Parent(null, this, behavior2)
-  _.push new actions.Parent(null, this, behavior2)
-  _.push new actions.Parent(null, this, behavior2)
-  _.push new actions.Parent(null, this, behavior2)
-  _.push new actions.Parent(null, this, behavior2)
-  _.push new actions.Parent(null, this, behavior2)
-  _.push new actions.Parent(null, this, behavior2)
-  _.push new actions.Parent(null, this, behavior2)
+  _.push new action.Parent(null, this, behavior2)
+  _.push new action.Parent(null, this, behavior2)
+  _.push new action.Parent(null, this, behavior2)
+  _.push new action.Parent(null, this, behavior2)
+  _.push new action.Parent(null, this, behavior2)
+  _.push new action.Parent(null, this, behavior2)
+  _.push new action.Parent(null, this, behavior2)
+  _.push new action.Parent(null, this, behavior2)
+  _.push new action.Parent(null, this, behavior2)
+  _.push new action.Parent(null, this, behavior2)
   return _
 
 
 return ->
-  return (new actions.Parent(null, null, behavior1, nodes)).execute()
+  return (new action.Parent(null, null, behavior1, nodes)).execute()
 
