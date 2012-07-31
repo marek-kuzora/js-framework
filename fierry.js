@@ -4,8 +4,13 @@
  * Copyright 2012, Marek Kuzora.
  */
 
+
+
 // Forcing strict mode.
 "use strict";
+
+// Copy the global scope from the browser or nodejs environment.
+var window = this || global;
 
 
 
