@@ -3,13 +3,15 @@ return class Style
   create: ($) ->
     $.node = $.parent().node
 
-    if not $.next_sibling(Style, $.type)
+    if $.traverse_forward(Style, $.type) is null
       $.node.style[$.type] = $.value
 
 
   dispose: ($) ->
-    if l = $.last_sibling(Style, $.type)
-      $.node.style[l.type] = l.value
+    if $.traverse_forward(Style, $.type) is null
 
-    else
-      $.node.style[$.type] = null
+      if b = $.traverse_backward(Style, $.type)
+        $.node.style[b.type] = b.value
+
+      else
+        $.node.style[$.type] = null

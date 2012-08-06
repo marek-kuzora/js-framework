@@ -7,8 +7,8 @@ return class Element
   finalize: ($) ->
     p = $.parent()
 
-    if p.finalized and s = $.next_sibling(Element)
-      p.node.insertBefore($.node, s)
+    if f = $.traverse_forward(Element)
+      p.node.insertBefore($.node, f.node)
 
     else
       p.node.appendChild($.node)

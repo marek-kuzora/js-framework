@@ -3,14 +3,15 @@ return class Attribute
   create: ($) ->
     $.node = $.parent().node
 
-    if not $.next_sibling(Attribute, $.type)
+    if $.traverse_forward(Attribute, $.type) is null
       $.node.setAttribute($.type, $.value)
       
 
   dispose: ($) ->
+    if $.traverse_forward(Attribute, $.type) is null
 
-    if l = $.last_sibling(Attribute, $.type)
-      $.node.setAttribute(l.type, l.value)
+      if b = $.traverse_backward(Attribute, $.type)
+        $.node.setAttribute(b.type, b.value)
 
-    else
-      $.node.removeAttribute($.type)
+      else
+        $.node.removeAttribute($.type)
