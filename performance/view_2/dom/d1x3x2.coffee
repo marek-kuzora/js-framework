@@ -1,6 +1,9 @@
 #
 # @require:
-#   actions: fierry/view_2/nodes.
+#   Parent:  fierry/view_2/parent
+#   Value:   fierry/view_2/value
+#   If:      fierry/view_2/if
+#
 #   Element: fierry/dom_2/element
 #   Root:    fierry/dom_2/root
 #
@@ -11,24 +14,21 @@ element = new Element()
 
 
 nodes = (_) ->
-  _.push new actions.Parent('div', this, element, (_) ->
-    _.push new actions.Parent('article', this, element)
-    _.push new actions.Parent('article', this, element)
+  _.push new Parent('div', this, element, (_) ->
+    _.push new Parent('article', this, element)
     return _
   )
-  _.push new actions.Parent('div', this, element, (_) ->
-    _.push new actions.Parent('article', this, element)
-    _.push new actions.Parent('article', this, element)
+  _.push new Parent('div', this, element, (_) ->
+    _.push new Parent('article', this, element)
     return _
   )
-  _.push new actions.Parent('div', this, element, (_) ->
-    _.push new actions.Parent('article', this, element)
-    _.push new actions.Parent('article', this, element)
+  _.push new Parent('div', this, element, (_) ->
+    _.push new Parent('article', this, element)
     return _
   )
   return _
 
 
 return ->
-  return (new actions.Parent(null, null, root, nodes)).execute()
+  return (new Parent(null, null, root, nodes)).execute()
 

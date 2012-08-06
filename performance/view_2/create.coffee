@@ -187,7 +187,7 @@ performance 'if'
     run:    -> @view()
 
 
-  '15 actions: 1x2x6':
+  '15 actions: 1x2x6 -2x-IF':
     before: -> @view = F.srequire(@prefix + '1x2x6')
     run:    -> @view()
 
