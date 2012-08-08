@@ -24,16 +24,16 @@ performance '/view_2.dom'
     run:    -> @v()
 
 
-  '3 elements + 1 attr -no-conflict':
-    before: -> @v = F.srequire(@prefix + 'ac1x3x1')
-    run:    -> @v()
-
-
   '1 element  + 3 attrs':
     before: -> @v = F.srequire(@prefix + 'a1x1x3')
     run:    -> @v()
 
 
-  '1 element  + 3 attrs -no-conflict':
-    before: -> @v = F.srequire(@prefix + 'ac1x1x3')
+  '3 elements + 1 style':
+    before: -> @v = F.srequire(@prefix + 's1x3x1')
+    run:    -> @v()
+
+
+  '1 element  + 3 styles':
+    before: -> @v = F.srequire(@prefix + 's1x1x3')
     run:    -> @v()

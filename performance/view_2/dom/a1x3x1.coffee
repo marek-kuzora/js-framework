@@ -1,18 +1,20 @@
 #
 # @require:
-#   Parent:  fierry/view_2/parent
-#   Value:   fierry/view_2/value
-#   If:      fierry/view_2/if
+#   Parent:    fierry/view_2/parent
+#   Value:     fierry/view_2/value
+#   If:        fierry/view_2/if
 #
-#   Element: fierry/dom_2/element
-#   Attr:    fierry/dom_2/attribute
-#   Root:    fierry/dom_2/root
+#   Root:      fierry/dom_2/root
+#   Element:   fierry/dom_2/element
+#   Attribute: fierry/dom_2/attribute
 #
 
 
-root = new Root()
-element = new Element()
-attribute = new Attr()
+
+root      = new Root()
+element   = new Element()
+attribute = new Attribute()
+
 
 
 nodes = (_) ->
@@ -33,5 +35,6 @@ nodes = (_) ->
 
 return ->
   return (new Parent(null, null, root, nodes)).execute()
+
 
 

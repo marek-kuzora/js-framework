@@ -2,8 +2,16 @@ return class Style
 
   create: ($) ->
     $.node = $.parent().node
-    $.node.style[$.type] = $.value
+
+    if $.traverse_forward(Style, $.type) is null
+      $.node.style[$.type] = $.value
 
 
   dispose: ($) ->
-    $.node.style[$.type] = null
+    if $.traverse_forward(Style, $.type) is null
+
+      if b = $.traverse_backward(Style, $.type)
+        $.node.style[$.type] = b.value
+
+      else
+        $.node.style[$.type] = null

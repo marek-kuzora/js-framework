@@ -1,18 +1,17 @@
 return class Element
 
   create: ($) ->
-    $.node = document.createElement($.type)
+    $.node  = document.createElement($.type)
+    $.pnode = $.parent().node
 
 
   finalize: ($) ->
-    p = $.parent()
-
     if f = $.traverse_forward(Element)
-      p.node.insertBefore($.node, f.node)
+      $.pnode.insertBefore($.node, f.node)
 
     else
-      p.node.appendChild($.node)
+      $.pnode.appendChild($.node)
 
 
   dispose: ($) ->
-    $.parent().node.removeChild($.node)
+    $.pnode.removeChild($.node)
