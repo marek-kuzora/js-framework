@@ -1,8 +1,9 @@
 #
 # Class responsible for tracking data access from the accessors.
-# Clients can subscribe to the tracker to be notified when any model's
-# data is accessed. Clients are placed on a stack and only the top
-# subscribed listener will be notified when a data access occurs.
+# Clients can subscribe to the tracker to automatically register a
+# emitter whenever it is being accessed. Clients are placed on a 
+# stack and only the top subscribed listener will be notified when a
+# data access occurs.
 #
 class Tracker
 
@@ -11,36 +12,35 @@ class Tracker
 
 
   #
-  # Subscribes client to track data access from the accessors. Client
-  # should implement track_data_access() method that will receive the
-  # accessor as its first and only argument. Please note, that only
-  # the top subscribed client will be notified when a data access
-  # occurs.
+  # Registers listener to track emitters accessed. Each listener
+  # should implement the notify() method in order to execute when
+  # notified by its emitter. Please note, that only the top 
+  # subscribed listener will be notified when a data access occurs.
   #
-  # @param client  {Object}
+  # @param l  {Object}
   #
-  push: (client) ->
-    @stack_.push(client)
+  start: (l) ->
+    @stack_.push(l)
 
 
   #
-  # Unsubscribes top subscribed client from tracking the data access
-  # from the accessors. Please note, that clients should subscribe 
-  # and unsubscribe in a specific stack-based order.
+  # Removes top registered listener from tracking the emitters 
+  # accessed. Please note, that listeners should subscribe and
+  # unsubscribe in a specific stack-based order.
   #
-  pop: ->
+  stop: ->
     @stack_.pop()
 
 
   #
-  # Notifies the top subscribed client, that a data access occured,
-  # and provides the exact dao that accessed its data.
+  # Registers the top subscribed listener to the emitter being
+  # accessed. Does nothing if there are no registered listeners.
   #
   # @param e  {Emitter}
   #
-  track: (e) ->
+  register_emitter: (e) ->
     if @stack_.length
-      @stack_[@stack_.length - 1].notify_access(e)
+      e.register_listener(@stack_[@stack_.length - 1])
 
 
 

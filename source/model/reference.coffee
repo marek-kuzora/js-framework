@@ -1,10 +1,8 @@
 #
 # @require:
-#   tracker:   fierry/model/tracker
-#   notifier:  fierry/model/notifier
-#
 #   Emitter: fierry/emitter/emitter
 #
+
 
 
 return class Reference extends Emitter
@@ -14,10 +12,10 @@ return class Reference extends Emitter
     
 
   get: =>
-    @fire_access()
+    @trigger_access_()
     return @pointer_.call(@parent_.get(), @value_)()
 
 
   set: (value) =>
     @value_ = value
-    @fire_change()
+    @trigger_change_()

@@ -129,28 +129,24 @@ class Listener
     @s = (F.random(EMITTERS) for i in [0...s])
 
 
-  notify_change: ->
-    tracker().push(@)
+  notify: ->
+    tracker().start(@)
 
-    @data[i].fire_access() for i in @s
-    @data[F.random(EMITTERS)].fire_access() for i in [0...@d]
+    @data[i].trigger_access_() for i in @s
+    @data[F.random(EMITTERS)].trigger_access_() for i in [0...@d]
 
-    tracker().pop()
-
-
-  notify_access: (e) ->
-    e.subscribe(@)
+    tracker().stop()
 
 
 
 create = (s, d, data) ->
   listeners = (new Listener(s, d, data) for i in [0...LISTENERS])
-  l.notify_change() for l in listeners
+  l.notify() for l in listeners
 
   return listeners
 
 
 
 test = (count, data) ->
-  data[F.random(EMITTERS)].fire_change() for i in [0...count]
+  data[F.random(EMITTERS)].trigger_change_() for i in [0...count]
   notifier().run()

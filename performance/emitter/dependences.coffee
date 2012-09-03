@@ -49,17 +49,14 @@ performance 'random_10_emitters_dynamic'
 
 class Listener
 
-  notify_access: (e) ->
-    e.subscribe(@)
-
-  notify_change: ->
+  notify: ->
 
 
 
 test = (listener, array, statics, dynamics) ->
-  tracker().push(listener)
+  tracker().start(listener)
 
-  array[i].fire_access() for i in [0...statics]
-  array[F.random(50)].fire_access() for i in [0...dynamics]
+  array[i].trigger_access_() for i in [0...statics]
+  array[F.random(50)].trigger_access_() for i in [0...dynamics]
 
-  tracker().pop()
+  tracker().stop()

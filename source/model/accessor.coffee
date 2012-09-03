@@ -69,7 +69,7 @@ return class Accessor extends Emitter
   set: (value) =>
     @value_ = value
     @model_ = undefined
-    @fire_change()
+    @trigger_change_()
     
 
   #
@@ -117,9 +117,9 @@ return class Accessor extends Emitter
     return acc.get
 
 
-  fire_change: ->
+  trigger_change_: ->
     super()
-    a.fire_change() for a in @curr_
+    a.trigger_change_() for a in @curr_
 
     @curr_ = []
     @counter_++
@@ -135,3 +135,6 @@ return class Accessor extends Emitter
   #
   notify: (visited) ->
     super(visited)
+
+    if @model_ and @model_.after_notify
+      @model_.after_notify()

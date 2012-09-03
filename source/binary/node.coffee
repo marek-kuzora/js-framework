@@ -32,7 +32,7 @@ return class BNode
     return @right isnt null and @left is null
 
 
-  for_each: (fn) ->
-    @left.for_each(fn) if @left
-    fn(@)
-    @right.for_each(fn) if @right
+  each: (fn) ->
+    @left.each(fn) if @left
+    fn(@value)
+    @right.each(fn) if @right

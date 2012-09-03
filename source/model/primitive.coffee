@@ -1,6 +1,6 @@
 #
 # @require:
-#   Emitter:  fierry/emitter/emitter
+#   Emitter: fierry/emitter/emitter
 #
 
 
@@ -11,10 +11,10 @@ return class Primitive extends Emitter
     super()
 
   get: =>
-    @fire_access()
+    @trigger_access_()
     return @value_
 
 
   set: (value) =>
     @value_ = value
-    @fire_change()
+    @trigger_change_()

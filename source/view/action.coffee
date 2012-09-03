@@ -29,7 +29,7 @@ return class Action
     @finalized = false
 
   execute: ->
-    tracker().push(@)
+    tracker().start(@)
 
     @value = @value_fn_()
     @nodes = @nodes_fn_(new Array())
@@ -41,7 +41,7 @@ return class Action
 
     @behavior_.finalize(@)
 
-    tracker().pop()
+    tracker().stop()
     @finalized = true
     return @
 
@@ -49,7 +49,7 @@ return class Action
   notify_change: ->
     return if @disposed
 
-    tracker().push(@)
+    tracker().start(@)
     @value = @value_fn_()
 
     @behavior_.update(@)
@@ -58,12 +58,8 @@ return class Action
     node.dispose() for node in old_nodes
     node.execute() for node in new_nodes
 
-    tracker().pop()
+    tracker().stop()
     return
-
-
-  notify_access: (e) ->
-    e.subscribe(@)
 
 
   _get_changed_nodes: ->

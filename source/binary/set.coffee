@@ -6,6 +6,7 @@
 #
 
 
+
 UID_KEY = (value) -> F.uid(value)
 
 
@@ -82,8 +83,8 @@ return class BSet
     return new InOrderIterator(@array_)
 
 
-  for_each: (fn) ->
-    tree.for_each(fn) for tree in @array_
+  each: (fn) ->
+    tree.each(fn) for tree in @array_
     return
 
 

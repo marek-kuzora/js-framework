@@ -4,16 +4,16 @@
 #
 
 
-performance '/emitter.fire_change'
+performance '/emitter.trigger_change_'
 
-  'continous':
+  'continuous':
     before: -> @e = new Emitter()
-    run:    -> @e.fire_change()
+    run:    -> @e.trigger_change_()
 
   'with subscribe':
     before: ->
       @e = new Emitter()
       @l = {}
     run: ->
-      @e.fire_change()
-      @e.subscribe(@l)
+      @e.trigger_change_()
+      @e.register_listener(@l)

@@ -7,7 +7,7 @@
 
 
 // Forcing strict mode.
-"use strict";
+// "use strict";
 
 // Copy the global scope from the browser or nodejs environment.
 var window = this || global;
@@ -556,7 +556,7 @@ var F = (function() {
 
 
 
-  // Uid global sequence. Starts with 1 as 0 evaluates to false when
+  // Global uid sequence. Starts with 1 as 0 evaluates to false when
   // forced to act as a Boolean.
   F.uid_sequence_ = 1;
 
@@ -573,8 +573,10 @@ var F = (function() {
       throw new Error("Can't retrieve UID from a primitive.");
     }
 
+    // Assign a unique identifier to the given object.
+    // Increment the global uid sequence.
     if(!o.__uid__) {
-      o.__uid__ = ++F.uid_sequence_;
+      o.__uid__ = F.uid_sequence_++;
     }
     return o.__uid__;
   };
