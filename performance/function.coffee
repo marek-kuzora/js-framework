@@ -12,3 +12,4 @@ performance '/function'
 # Load tests.
 F.run 'fierry-pfc/function/create'
 F.run 'fierry-pfc/function/execute'
+F.run 'fierry-pfc/function/getters'

@@ -62,6 +62,7 @@ return self =
     array.splice(l, 1) while l-- when selector(array[l])
     return
 
+
   #
   # Shuffles the given array and returns it to the client.
   #

@@ -1,36 +1,36 @@
 #
 # @require:
-#   Parent:   fierry/view_2/parent
-#   Value:    fierry/view_2/value
-#   If:       fierry/view_2/if
+#   View:     fierry/view_3/view
+#   Parent:   fierry/view_3/parent
+#   Value:    fierry/view_3/value
 #
-#   Behavior: fierry/view_2/behavior
+#   Behavior: fierry/view_3/behavior
 #
 
 
 behavior = new Behavior()
 
 
-nodes = (_) ->
-  _.push new Parent(null, this, behavior, (_) ->
-    _.push new Parent(null, this, behavior, (_) ->
-      _.push new Value(null, this, behavior, -> 1)
+nodes = (_, world) ->
+  _.push new Parent(this, null, behavior, (_) ->
+    _.push new Parent(this, null, behavior, (_) ->
+      _.push new Value(this, null, behavior, -> 1)
       return _
     )
     return _
   )
 
-  _.push new Parent(null, this, behavior, (_) ->
-    _.push new Parent(null, this, behavior, (_) ->
-      _.push new Value(null, this, behavior, -> 2)
+  _.push new Parent(this, null, behavior, (_) ->
+    _.push new Parent(this, null, behavior, (_) ->
+      _.push new Value(this, null, behavior, -> 2)
       return _
     )
     return _
   )
 
-  _.push new Parent(null, this, behavior, (_) ->
-    _.push new Parent(null, this, behavior, (_) ->
-      _.push new Value(null, this, behavior, -> 3)
+  _.push new Parent(this, null, behavior, (_) ->
+    _.push new Parent(this, null, behavior, (_) ->
+      _.push new Value(this, null, behavior, -> 3)
       return _
     )
     return _
@@ -39,4 +39,4 @@ nodes = (_) ->
 
 
 return ->
-  return (new Parent(null, null, behavior, nodes)).execute()
+  return new View(null, behavior, nodes)

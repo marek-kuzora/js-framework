@@ -34,7 +34,9 @@ return class Emitter
   #
   # Notifies the registered listeners. Will not execute already
   # invoked listeners unless the emitter has changed during the
-  # notification phase.
+  # notification phase. Will drop all outdated listeners, so clients
+  # that wish to continue being notified whenever the emitter changes,
+  # need to re-register.
   #
   # For performance reasons listeners wont receive any information
   # regarding which emitters triggered their notification. If
@@ -48,7 +50,7 @@ return class Emitter
     # Execute not duplicated listeners or all if the emitter changed.
     @outdated_.each((l) => l.notify() if @duplicates_ or set.add(l))
 
-    # Clear the listeners collection.
+    # Clear the listeners list.
     @outdated_ = null
 
 

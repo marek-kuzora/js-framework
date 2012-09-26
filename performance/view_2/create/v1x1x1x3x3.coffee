@@ -1,38 +1,38 @@
 #
 # @require:
-#   Parent:   fierry/view_2/parent
-#   Value:    fierry/view_2/value
-#   If:       fierry/view_2/if
+#   View:     fierry/view_3/view
+#   Parent:   fierry/view_3/parent
+#   Value:    fierry/view_3/value
 #
-#   Behavior: fierry/view_2/behavior
+#   Behavior: fierry/view_3/behavior
 #
 
 
 behavior = new Behavior()
 
 
-nodes = (_) ->
-  _.push new Parent(null, this, behavior, (_) ->
-    _.push new Parent(null, this, behavior, (_) ->
+nodes = (_, world) ->
+  _.push new Parent(this, null, behavior, (_) ->
+    _.push new Parent(this, null, behavior, (_) ->
 
-      _.push new Parent(null, this, behavior, (_) ->
-        _.push new Value(null, this, behavior, -> 1)
-        _.push new Value(null, this, behavior, -> 2)
-        _.push new Value(null, this, behavior, -> 3)
+      _.push new Parent(this, null, behavior, (_) ->
+        _.push new Value(this, null, behavior, -> 1)
+        _.push new Value(this, null, behavior, -> 2)
+        _.push new Value(this, null, behavior, -> 3)
         return _
       )
 
-      _.push new Parent(null, this, behavior, (_) ->
-        _.push new Value(null, this, behavior, -> 4)
-        _.push new Value(null, this, behavior, -> 5)
-        _.push new Value(null, this, behavior, -> 6)
+      _.push new Parent(this, null, behavior, (_) ->
+        _.push new Value(this, null, behavior, -> 4)
+        _.push new Value(this, null, behavior, -> 5)
+        _.push new Value(this, null, behavior, -> 6)
         return _
       )
 
-      _.push new Parent(null, this, behavior, (_) ->
-        _.push new Value(null, this, behavior, -> 7)
-        _.push new Value(null, this, behavior, -> 8)
-        _.push new Value(null, this, behavior, -> 9)
+      _.push new Parent(this, null, behavior, (_) ->
+        _.push new Value(this, null, behavior, -> 7)
+        _.push new Value(this, null, behavior, -> 8)
+        _.push new Value(this, null, behavior, -> 9)
         return _
       )
       return _
@@ -43,4 +43,4 @@ nodes = (_) ->
 
 
 return ->
-  return (new Parent(null, null, behavior, nodes)).execute()
+  return new View(null, behavior, nodes)

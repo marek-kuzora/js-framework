@@ -12,36 +12,36 @@ performance '/set.iterate'
 
 
 
-performance 'for_each'
+performance 'each'
   before: -> @fn = ((v) ->)
 
   ' 0 length':
     before: -> @bset = set.create()
-    run:    -> @bset.for_each(@fn)
+    run:    -> @bset.each(@fn)
 
   ' 5 length':
     before: -> @bset = set.create(hash.array(5))
-    run:    -> @bset.for_each(@fn)
+    run:    -> @bset.each(@fn)
 
   '10 length':
     before: -> @bset = set.create(hash.array(10))
-    run:    -> @bset.for_each(@fn)
+    run:    -> @bset.each(@fn)
 
   '20 length':
     before: -> @bset = set.create(hash.array(20))
-    run:    -> @bset.for_each(@fn)
+    run:    -> @bset.each(@fn)
 
   '50 length':
     before: -> @bset = set.create(hash.array(50))
-    run:    -> @bset.for_each(@fn)
+    run:    -> @bset.each(@fn)
 
   '100 length':
     before: -> @bset = set.create(hash.array(100))
-    run:    -> @bset.for_each(@fn)
+    run:    -> @bset.each(@fn)
 
   '1000 length':
     before: -> @bset = set.create(hash.array(1000))
-    run:    -> @bset.for_each(@fn)
+    run:    -> @bset.each(@fn)
 
 
 
