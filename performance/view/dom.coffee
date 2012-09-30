@@ -59,12 +59,12 @@ performance '_30x_div_article_section'
 
 performance '_3_div_text'
 
+
   'native': ->
     p = document.createElement('div')
     for j in [0..2]
-      n = document.createTextNode('text' + j)
+      n = document.createTextNode('text')
       p.appendChild(n)
-
 
   'auto':
     before: -> @v = F.srequire(@prefix + '3_div_text')
@@ -138,6 +138,21 @@ performance '_1_div_3_styles'
 
 
 
+performance '_1_div_3_tags'
+
+  'native': ->
+    p = document.createElement('div')
+    for j in [0..2]
+      n = document.createElement('div')
+      n.className = 'header'
+      p.appendChild(n)
+
+  'auto':
+    before: -> @v = F.srequire(@prefix + 'div_3_tags')
+    run:    -> @v.run()
+
+
+
 performance '_3_div_tag'
 
   'native': ->
@@ -153,18 +168,3 @@ performance '_3_div_tag'
     before: -> @v = F.srequire(@prefix + '3_div_tag')
     run:    -> @v.run()
 
-
-
-performance '_1_div_3_tags'
-
-  'native': ->
-    p = document.createElement('div')
-    for j in [0..2]
-      n = document.createElement('div')
-      n.className = 'header'
-      p.appendChild(n)
-
-
-  'auto':
-    before: -> @v = F.srequire(@prefix + 'div_3_tags')
-    run:    -> @v.run()
