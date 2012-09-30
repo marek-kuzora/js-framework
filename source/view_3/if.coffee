@@ -88,3 +88,12 @@ return class If extends Special
 
     # Mark action as disposed.
     @disposed_ = true
+
+
+  #
+  # Returns last node that was appended to the siblings list at 
+  # the current level. This element will be the proper prev node 
+  # when generating siblings list in Parent or Group actions.
+  #
+  last: ->
+    return @group_.last_node_

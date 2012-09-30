@@ -28,6 +28,9 @@ return class Group extends Special
     # Boolean flag indicating that the action is disposed.
     @disposed_ = null
 
+    # Proper previous sibling of the action's next sibling.
+    @last_node_ = null
+
 
   create: (@prev_, @next_)->
 
@@ -50,8 +53,11 @@ return class Group extends Special
         # Create child node with proper siblings.
         node.create(prev, next)
 
-        # Set new prev sibling as the last executed node.
-        prev = node
+        # Set previous sibling as the last executed node.
+        prev = node.last()
+
+      # Set last node as the last executed node.
+      @last_node_ = prev
 
     # Stop data access tracking.
     tracker().stop()
@@ -86,6 +92,9 @@ return class Group extends Special
 
         # Set new prev sibling as the last executed node.
         prev = node
+
+      # Set last node as the last executed node.
+      @last_node_ = prev
 
     # Stop data access tracking.
     tracker().stop()

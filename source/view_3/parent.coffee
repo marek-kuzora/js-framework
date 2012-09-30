@@ -64,7 +64,9 @@ return class Parent extends Standard
         node.create(prev, next)
 
         # Set new prev sibling as the last executed node.
-        prev = node
+        prev = node.last()
+
+        # FIXME Prev is wrong if we processed a special action. It should be its last child instead of that action!
 
     # Execute finalize behavior after child nodes are created.
     @behavior_.finalize(@)

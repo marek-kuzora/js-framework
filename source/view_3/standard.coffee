@@ -35,6 +35,15 @@ return class Standard extends Abstract
 
 
   #
+  # Returns last node that was appended to the siblings list at 
+  # the current level. This element will be the proper prev node 
+  # when generating siblings list in Parent or Group actions.
+  #
+  last: ->
+    return @
+
+
+  #
   # Returns the action's previous sibling from the siblings list with 
   # the matching behavior and type.
   #

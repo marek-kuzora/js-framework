@@ -21,6 +21,9 @@ return class Primitive extends Special
     # Boolean flag indicating that the action is disposed.
     @disposed_ = null
 
+    # Proper previous sibling of the action's next sibling.
+    @last_node_ = null
+
 
   create: (@prev_, @next_) ->
 
@@ -46,7 +49,10 @@ return class Primitive extends Special
       @nodes_.push(node)
 
       # Set new prev sibling as the last executed node.
-      prev = node
+      prev = node.last()
+
+    # Set last node as the last executed node.
+    @last_node_ = prev
 
     return
 

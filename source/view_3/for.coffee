@@ -93,3 +93,12 @@ return class For extends Special
   create_inner_for_: ->
     return new Model(@, @value_, @nodes_fn_) if @value_ instanceof Emitter
     return new Primitive(@, @value_, @nodes_fn_)
+
+
+  #
+  # Returns last node that was appended to the siblings list at 
+  # the current level. This element will be the proper prev node 
+  # when generating siblings list in Parent or Group actions.
+  #
+  last: ->
+    return @inner_.last()
