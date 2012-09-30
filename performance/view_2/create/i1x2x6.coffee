@@ -40,7 +40,6 @@ nodes = (_, world) ->
   return _
 
 
-return ->
-  return new View(null, behavior, nodes)
+return new View(null, behavior, nodes)
 
 

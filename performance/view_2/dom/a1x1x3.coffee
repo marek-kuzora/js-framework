@@ -1,8 +1,9 @@
 #
 # @require:
-#   Parent:    fierry/view_2/parent
-#   Value:     fierry/view_2/value
-#   If:        fierry/view_2/if
+#   View:      fierry/view_3/view
+#   Parent:    fierry/view_3/parent
+#   Value:     fierry/view_3/value
+#   If:        fierry/view_3/if
 #
 #   Root:      fierry/dom_2/root
 #   Element:   fierry/dom_2/element
@@ -18,14 +19,13 @@ attribute = new Attribute()
 
 
 nodes = (_) ->
-  _.push new Parent('div', this, element, (_) ->
-    _.push new Value('id', this, attribute, -> 'A')
-    _.push new Value('title', this, attribute, -> 'Title')
-    _.push new Value('lang', this, attribute, -> 'pl-PL')
+  _.push new Parent(this, 'div', element, (_) ->
+    _.push new Value(this, 'id', attribute, -> 'A')
+    _.push new Value(this, 'title', attribute, -> 'Title')
+    _.push new Value(this, 'lang', attribute, -> 'pl-PL')
     return _
   )
   return _
 
 
-return ->
-  return (new Parent(null, null, root, nodes)).execute()
+return new View(null, root, nodes)

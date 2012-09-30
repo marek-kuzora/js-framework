@@ -1,8 +1,9 @@
 #
 # @require:
-#   Parent:  fierry/view_2/parent
-#   Value:   fierry/view_2/value
-#   If:      fierry/view_2/if
+#   View:    fierry/view_3/view
+#   Parent:  fierry/view_3/parent
+#   Value:   fierry/view_3/value
+#   If:      fierry/view_3/if
 #
 #   Root:    fierry/dom_2/root
 #   Style:   fierry/dom_2/style
@@ -18,15 +19,13 @@ element = new Element()
 
 
 nodes = (_) ->
-  _.push new Parent('div', this, element, (_) ->
-    _.push new Value('color', this, style, -> 'red')
-    _.push new Value('border', this, style, -> 'solid 1px gold')
-    _.push new Value('background', this, style, -> 'gray')
+  _.push new Parent(this, 'div', element, (_) ->
+    _.push new Value(this, 'color', style, -> 'red')
+    _.push new Value(this, 'border', style, -> 'solid 1px gold')
+    _.push new Value(this, 'background', style, -> 'gray')
     return _
   )
   return _
 
 
-return ->
-  return (new Parent(null, null, root, nodes)).execute()
-
+return new View(null, root, nodes)
