@@ -1,11 +1,14 @@
-return class Element
+#
+# @require:
+#   Element: fierry/dom_2/element
+#
+
+return class Text extends Element
 
   create: ($) ->
-    $.node  = document.createElement($.type())
+    $.node  = document.createTextNode($.value())
     $.pnode = $.parent().node
 
-
-  finalize: ($) ->
     if f = $.next_sibling(Element)
       $.pnode.insertBefore($.node, f.node)
 

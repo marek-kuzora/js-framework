@@ -1,29 +1,32 @@
 return class Tag
 
   create: ($) ->
-    $.node = $.parent().node
-    $.value = $.value.split(' ')
-    
-    $.tags = $.parent().tags ?= {}
-    
-    @insert_tags_($.tags, $.value)
-    @set_tags_($)
+    $.pnode  = $.parent().node
+    $.length = $.value().length
 
+    if !$.next_sibling(Tag)
+      $.pnode.className += $.value()
+
+    else
+      o = @get_offset_($)
+      c = $.pnode.className
+
+      $.pnode.className = c.substr(0, o) + $.value() + ' ' + cls.substr(o)
+      
 
   dispose: ($) ->
-    @erase_tags_($.tags, $.value)
-    @set_tags_($)
+    o = @get_offset_($)
+    c = $.pnode.className
+
+    $.pnode.className = c.substr(0, o) + cls.substr(o + $.length + 1)
 
 
-  insert_tags_: (h, tags) ->
-    (h[v] = 1 if not ++h[v]) for v in tags
-    return
+  get_offset_: ($) ->
+    offset = 0
 
+    while $ = $.prev()
 
-  erase_tags_: (h, tags) ->
-    (delete h[v] if --h[v] == 0) for v in tags
-    return
+      if node.behavior() instanceof Tag
+        offset += node.length + 1
 
-
-  set_tags_: ($) ->
-    $.node.setAttribute('class', Object.keys($.node.tags).join(' '))
+    return offset

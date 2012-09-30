@@ -49,12 +49,12 @@ return class Value extends Standard
     # Start data access tracking.
     tracker().start(@)
 
+    # Execute action's dispose behavior.
+    @behavior_.dispose(@)
+
     # Calculate the value if it's evaluation function is defined.
     if @value_fn_
       @value_ = @value_fn_()
-
-    # Execute action's dispose behavior.
-    @behavior_.dispose(@)
 
     # Execute action's create behavior.
     @behavior_.create(@)

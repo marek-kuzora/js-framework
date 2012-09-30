@@ -12,7 +12,7 @@ return class Abstract
   # @param parent_    {Abstract}
   #
   constructor: (@parent_) ->
-    
+
     # References to the previous & next siblings.
     @prev_ = null
     @next_ = null
@@ -22,27 +22,33 @@ return class Abstract
 
 
   #
-  # Returns immediate visible parent.
+  # Returns immediate standard parent.
   #
   parent: ->
-    p = @parent_
-    p = p.parent_ while p.is_special()
+    node = @parent_
+    node = node.parent_ while node and node.is_special()
 
-    return p
+    return node
 
 
   #
-  # Returns previous sibling from the siblings list.
+  # Returns standard previous sibling from the siblings list.
   #
   prev: ->
-    return @prev_
+    node = @prev_
+    node = node.prev_ while node and node.is_special()
+
+    return node
 
 
   #
-  # Returns next sibling from the siblings list.
+  # Returns standard next sibling from the siblings list.
   #
   next: ->
-    return @next_
+    node = @next_
+    node = node.next_ while node and node.is_special()
+
+    return node
 
 
   #

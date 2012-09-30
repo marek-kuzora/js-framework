@@ -8,38 +8,24 @@
 class Tag extends Behavior
 
   create: ($, parent) ->
-    $.node = parent.node
-    $.node.tags ?= {}
+    $.classes = parent.node.classList
 
 
   update: ($)->
-    $.value = $.value.split(' ')
+    if $.old_value
+      $.classes.remove($.old_value)
 
-    @_erase_tags($.node.tags, $.old_value) if $.old_value
-    @_insert_tags($.node.tags, $.value)    if $.value
-    @_set_tags($)
+    if $.value
+      $.classes.add($.value)
 
     $.old_value = $.value
 
 
   dispose: ($) ->
-    @_erase_tags($.node.tags, $.old_value) if $.old_value
-    @_set_tags($)
-
-
-  _insert_tags: (h, tags) ->
-    (h[v] = 1 if not ++h[v]) for v in tags
-    return
-
-
-  _erase_tags: (h, tags) ->
-    (delete h[v] if --h[v] == 0) for v in tags
-    return
-
-
-  _set_tags: ($) ->
-    $.node.setAttribute('class', Object.keys($.node.tags).join(' '))
+    if $.old_value
+      $.classes.remove($.old_value)
 
 
 
 return new Tag()
+

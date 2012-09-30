@@ -11,9 +11,10 @@ return class View
 
 
   run: (world) ->
-    nodes_fn_ = @nodes_fn_
+    nodes_raw = @nodes_fn_
+    nodes_fn  = (_) -> nodes_raw.call(@, _, world)
 
-    action = new Parent(null, @type_, @behavior_, (_) -> nodes_fn_(_, world))
+    action = new Parent(null, @type_, @behavior_, nodes_fn)
     action.create()
 
     return action

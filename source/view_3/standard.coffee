@@ -46,9 +46,6 @@ return class Standard extends Abstract
 
     while node = node.prev()
 
-      if node.is_special()
-        continue
-
       if node.behavior() instanceof b and (!t or node.type() is t)
         return node
 
@@ -66,9 +63,6 @@ return class Standard extends Abstract
     node = @
 
     while node = node.next()
-
-      if node.is_special()
-        continue
 
       if node.behavior() instanceof b and (!t or node.type() is t)
         return node
