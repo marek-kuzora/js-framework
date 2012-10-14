@@ -9,7 +9,7 @@
 
 behaviors:
 
-  dom-root:
+  dom-body:
     parent: true
     location: fierry/dom_2/root
 
@@ -38,7 +38,7 @@ actions:
 
   dom-body:
     root: true
-    behavior: dom-root
+    behavior: dom-body
     groups:
       - dom-element
 

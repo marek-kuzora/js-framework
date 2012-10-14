@@ -72,8 +72,8 @@ return class Value extends Standard
     @behavior_.dispose(@)
 
     # Remove action from the siblings list.
-    @prev_.next_ = @next_
-    @next_.prev_ = @prev_
+    @prev_.next_ = @next_ if @prev_
+    @next_.prev_ = @prev_ if @next_
 
     # Mark action as disposed.
     @disposed_ = true

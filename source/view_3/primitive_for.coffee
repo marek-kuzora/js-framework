@@ -42,7 +42,9 @@ return class Primitive extends Special
 
       # Create a group with its child nodes receiving additional loop
       # argument. Inject the group after FOR into the siblings list.
-      node = new Group(@, (_) -> nodes_fn_(_, v))
+
+      # Could get wrong v after all!
+      node = new Group(@, (_) -> nodes_fn_.call(@, _, v))
       node.create(prev, next)
 
       # Insert group as the FOR's child node.

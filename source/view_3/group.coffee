@@ -106,7 +106,8 @@ return class Group extends Special
     return if @disposed_
 
     # Dispose all existing nodes.
-    node.dispose() for node in @nodes_
+    if @nodes_fn_
+      node.dispose() for node in @nodes_
 
     # Remove action from the siblings list.
     @prev_.next_ = @next_ if @prev_

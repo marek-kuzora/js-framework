@@ -47,7 +47,6 @@ return class For extends Special
     # Stop data access tracking.
     tracker().stop()
 
-
   notify: ->
 
     # Return if action is already disposed.

@@ -40,7 +40,7 @@ return class Parent extends Standard
   # @param prev_  {Abstract}
   # @param next_  {Abstract}
   #
-  create: (@prev_, @next_)->
+  create: (@prev_, @next_) ->
 
     # Start data access tracking.
     tracker().start(@)
@@ -65,8 +65,6 @@ return class Parent extends Standard
 
         # Set new prev sibling as the last executed node.
         prev = node.last()
-
-        # FIXME Prev is wrong if we processed a special action. It should be its last child instead of that action!
 
     # Execute finalize behavior after child nodes are created.
     @behavior_.finalize(@)
@@ -137,7 +135,8 @@ return class Parent extends Standard
     return if @disposed_
 
     # Dispose all existing nodes.
-    node.dispose() for node in @nodes_
+    if @nodes_fn_
+      node.dispose() for node in @nodes_
 
     # Execute dispose behavior after child nodes are disposed.
     @behavior_.dispose(@)

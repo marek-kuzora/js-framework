@@ -11,14 +11,14 @@ return class Tag
       o = @get_offset_($)
       c = $.pnode.className
 
-      $.pnode.className = c.substr(0, o) + $.value() + ' ' + cls.substr(o)
+      $.pnode.className = c.substr(0, o) + $.value() + ' ' + c.substr(o)
       
 
   dispose: ($) ->
     o = @get_offset_($)
     c = $.pnode.className
 
-    $.pnode.className = c.substr(0, o) + cls.substr(o + $.length + 1)
+    $.pnode.className = c.substr(0, o) + c.substr(o + $.length + 1)
 
 
   get_offset_: ($) ->
