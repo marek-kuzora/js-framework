@@ -1,31 +1,32 @@
-#
-# @require:
-#   Behavior: fierry/view/behavior
-#
+return class Tag
 
+  create: ($) ->
+    $.pnode  = $.parent().node
+    $.length = $.value().length
 
+    if !$.next_sibling(Tag)
+      $.pnode.className += $.value()
 
-class Tag extends Behavior
+    else
+      o = @get_offset_($)
+      c = $.pnode.className
 
-  create: ($, parent) ->
-    $.classes = parent.node.classList
-
-
-  update: ($)->
-    if $.old_value
-      $.classes.remove($.old_value)
-
-    if $.value
-      $.classes.add($.value)
-
-    $.old_value = $.value
-
+      $.pnode.className = c.substr(0, o) + $.value() + ' ' + c.substr(o)
+      
 
   dispose: ($) ->
-    if $.old_value
-      $.classes.remove($.old_value)
+    o = @get_offset_($)
+    c = $.pnode.className
+
+    $.pnode.className = c.substr(0, o) + c.substr(o + $.length + 1)
 
 
+  get_offset_: ($) ->
+    offset = 0
 
-return new Tag()
+    while $ = $.prev()
 
+      if node.behavior() instanceof Tag
+        offset += node.length + 1
+
+    return offset

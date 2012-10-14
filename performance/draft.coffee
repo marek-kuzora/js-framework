@@ -11,4 +11,3 @@ performance '/draft'
 
 # Load tests.
 F.run 'fierry-pfc/draft/assign_prototype'
-F.run 'fierry-pfc/draft/add_action'

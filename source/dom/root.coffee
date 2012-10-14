@@ -1,15 +1,10 @@
-#
-# @require:
-#   Behavior: fierry/view/behavior
-#
-
-
-
-class Root extends Behavior
+return class Root
 
   create: ($) ->
     $.node = document.body
 
 
+  finalize: ($) ->
 
-return new Root()
+
+  dispose: ($) ->

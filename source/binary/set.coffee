@@ -48,6 +48,7 @@ return class BSet
     return false
 
 
+  # TODO foreach wouldn't be faster ??
   add_all: (collection) ->
 
     # Get the collection's iterator.

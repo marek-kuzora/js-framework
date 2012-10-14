@@ -1,21 +1,17 @@
-#
-# @require:
-#   Behavior: fierry/view/behavior
-#
+return class Attribute
+
+  create: ($) ->
+    $.node = $.parent().node
+
+    if $.next_sibling(Attribute, $.type()) is null
+      $.node.setAttribute($.type(), $.value())
 
 
-
-class Attribute extends Behavior
-
-  create: ($, parent) ->
-    $.node = parent.node
-
-  update: ($) ->
-    $.node.setAttribute($.type, $.value)
-      
   dispose: ($) ->
-    $.node.setAttribute($.type, $.parent.get($.type))
+    if $.next_sibling(Attribute, $.type()) is null
 
+      if b = $.prev_sibling(Attribute, $.type())
+        $.node.setAttribute(b.type(), b.value())
 
-
-return new Attribute()
+      else
+        $.node.removeAttribute($.type())

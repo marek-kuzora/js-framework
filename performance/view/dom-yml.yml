@@ -1,12 +1,15 @@
 behaviors:
-  pfc/dom:
+
+  test-dom-root:
+    parent: true
     location: fierry-pfc/view/dom-resource
- 
+
+
 actions:
 
-  pfc/dom:
+  test-dom-root:
     root: true
-    behavior: pfc/dom
+    behavior: test-dom-root
     groups:
-      - dom/root
-      - dom/element/common
+      - dom-element
+      - dom-element-common

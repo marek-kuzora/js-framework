@@ -31,7 +31,6 @@ F.run 'fierry-pfc/draft'
 F.run 'fierry-pfc/emitter'
 F.run 'fierry-pfc/model'
 F.run 'fierry-pfc/view'
-F.run 'fierry-pfc/view_2'
 
 
 

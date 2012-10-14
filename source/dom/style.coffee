@@ -1,21 +1,17 @@
-#
-# @require:
-#   Behavior: fierry/view/behavior
-#
+return class Style
 
+  create: ($) ->
+    $.node = $.parent().node
 
+    if $.next_sibling(Style, $.type()) is null
+      $.node.style[$.type()] = $.value()
 
-class Style extends Behavior
-
-  create: ($, parent) ->
-    $.node = parent.node
-
-  update: ($)->
-    $.node.style[$.type] = $.value
 
   dispose: ($) ->
-    $.node.style[$.type] = $.parent.get($.type)
+    if $.next_sibling(Style, $.type()) is null
 
+      if b = $.prev_sibling(Style, $.type())
+        $.node.style[$.type()] = b.value
 
-
-return new Style()
+      else
+        $.node.style[$.type()] = null

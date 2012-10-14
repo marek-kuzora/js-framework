@@ -1,27 +1,78 @@
 performance '/view.dom'
+
+
+
+performance 'auto'
   before: ->
     @prefix = 'fierry-pfc/view/dom/'
 
 
+  ' 3 elements':
+    before: -> @v = F.srequire(@prefix + 'd1x3')
+    run:    -> @v.run()
 
-performance '_3_div'
 
-  'native': ->
+  ' 6 elements':
+    before: -> @v = F.srequire(@prefix + 'd1x3x1')
+    run:    -> @v.run()
+
+
+  '30 elements':
+    before: -> @v = F.srequire(@prefix + 'd1x3x3x2')
+    run:    -> @v.run()
+
+
+  ' 1 element  + 3 text':
+    before: -> @v = F.srequire(@prefix + 'tx1x1x3')
+    run:    -> @v.run()
+
+
+  ' 3 elements + 1 text':
+    before: -> @v = F.srequire(@prefix + 'tx1x3x1')
+    run:    -> @v.run()
+
+
+  ' 1 element  + 3 attrs':
+    before: -> @v = F.srequire(@prefix + 'a1x1x3')
+    run:    -> @v.run()
+
+
+  ' 3 elements + 1 attr':
+    before: -> @v = F.srequire(@prefix + 'a1x3x1')
+    run:    -> @v.run()
+
+
+  ' 1 element  + 3 styles':
+    before: -> @v = F.srequire(@prefix + 's1x1x3')
+    run:    -> @v.run()
+
+
+  ' 3 elements + 1 style':
+    before: -> @v = F.srequire(@prefix + 's1x3x1')
+    run:    -> @v.run()
+
+
+  ' 1 element  + 3 tag':
+    before: -> @v = F.srequire(@prefix + 't1x1x3')
+    run:    -> @v.run()
+
+
+  ' 3 elements + 1 tag':
+    before: -> @v = F.srequire(@prefix + 't1x3x1')
+    run:    -> @v.run()
+
+
+
+performance 'native'
+
+  ' 3 elements': ->
     p = document.createElement('div')
     for j in [0..2]
       n = document.createElement('div')
       p.appendChild(n)
 
 
-  'auto':
-    before: -> @v = F.srequire(@prefix + 'elems_3')
-    run:    -> @v.run()
-
-
-
-performance '_6_div_article'
-
-  'native': ->
+  ' 6 elements': ->
     n0 = document.createElement('div')
     for j in [0..2]
       n1 = document.createElement('div')
@@ -30,15 +81,7 @@ performance '_6_div_article'
       n0.appendChild(n1)
 
 
-  'auto':
-    before: -> @v = F.srequire(@prefix + 'elems_6')
-    run:    -> @v.run()
-
-
-
-performance '_30x_div_article_section'
-
-  'native': ->
+  '30 elements': ->
     n0 = document.createElement('div')
     for j in [0..2]
       n1 = document.createElement('div')
@@ -51,79 +94,40 @@ performance '_30x_div_article_section'
       n0.appendChild(n1)
 
 
-  'auto':
-    before: -> @v = F.srequire(@prefix + 'elems_30')
-    run:    -> @v.run()
-
-
-
-performance '_3_div_text'
-
-
-  'native': ->
+  ' 1 element  + 3 text': ->
     p = document.createElement('div')
     for j in [0..2]
       n = document.createTextNode('text')
       p.appendChild(n)
 
-  'auto':
-    before: -> @v = F.srequire(@prefix + '3_div_text')
-    run:    -> @v.run()
 
-
-
-performance '_3_div_attr'
-
-  'native': ->
+  ' 3 elements + 1 text': ->
     p = document.createElement('div')
     for j in [0..2]
       n = document.createElement('div')
-      n.setAttribute('title', 'title')
+      t = document.createTextNode('text')
+      n.appendChild(t)
       p.appendChild(n)
 
 
-  'auto':
-    before: -> @v = F.srequire(@prefix + '3_div_attr')
-    run:    -> @v.run()
-
-
-
-performance '_1_div_3_attrs'
-
-  'native': ->
+  ' 1 element  + 3 attrs': ->
     p = document.createElement('div')
     n = document.createElement('div')
     n.setAttribute('title', 'title')
     n.setAttribute('lang', 'pl-PL')
     n.setAttribute('draggable', 'true')
     p.appendChild(n)
+    
 
-
-  'auto':
-    before: -> @v = F.srequire(@prefix + 'div_3_attrs')
-    run:    -> @v.run()
-
-
-
-performance '_3_div_style'
-
-  'native': ->
+  ' 3 elements + 1 attr': ->
     p = document.createElement('div')
     for j in [0..2]
       n = document.createElement('div')
-      n.style.color = 'red'
+      n.setAttribute('id', 'ID')
       p.appendChild(n)
 
 
-  'auto':
-    before: -> @v = F.srequire(@prefix + '3_div_style')
-    run:    -> @v.run()
-
-
-
-performance '_1_div_3_styles'
-
-  'native': ->
+  ' 1 element  + 3 styles': ->
     p = document.createElement('div')
     n = document.createElement('div')
     n.style.color = 'red'
@@ -132,30 +136,15 @@ performance '_1_div_3_styles'
     p.appendChild(n)
 
 
-  'auto':
-    before: -> @v = F.srequire(@prefix + 'div_3_styles')
-    run:    -> @v.run()
-
-
-
-performance '_1_div_3_tags'
-
-  'native': ->
+  ' 3 elements + 1 style': ->
     p = document.createElement('div')
     for j in [0..2]
       n = document.createElement('div')
-      n.className = 'header'
+      n.style.color = 'red'
       p.appendChild(n)
 
-  'auto':
-    before: -> @v = F.srequire(@prefix + 'div_3_tags')
-    run:    -> @v.run()
 
-
-
-performance '_3_div_tag'
-
-  'native': ->
+  ' 1 element  + 3 tag': ->
     p = document.createElement('div')
     n = document.createElement('div')
     n.className  = 'header '
@@ -164,7 +153,9 @@ performance '_3_div_tag'
     p.appendChild(n)
 
 
-  'auto':
-    before: -> @v = F.srequire(@prefix + '3_div_tag')
-    run:    -> @v.run()
-
+  ' 3 elements + 1 tag': ->
+    p = document.createElement('div')
+    for j in [0..2]
+      n = document.createElement('div')
+      n.className = 'header'
+      p.appendChild(n)

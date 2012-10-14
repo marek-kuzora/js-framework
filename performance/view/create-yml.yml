@@ -1,24 +1,40 @@
 behaviors:
-  pfc/dummy:
-    location: fierry-pfc/view/create-resource
+
+  test-parent:
+    parent: true
+    location: fierry/view/behavior
+
+  test-value:
+    parent: false
+    location: fierry/view/behavior
+
 
 actions:
 
-  pfc/dummy:
+  test-root:
     root: true
-    behavior: pfc/dummy
+    behavior: test-parent
     groups:
-      - dummy/root
+      - test-root
 
-  pfc/dummy-nodes:
-    behavior: pfc/dummy
+  test-nodes:
+    behavior: test-parent
     types:
-      - dummy-1
-      - dummy-2
-      - dummy-3
+      - parent-1
+      - parent-2
+      - parent-3
     groups:
-      - dummy/node
+      - test-parent
     from:
-      - dummy/root
-      - dummy/node
+      - test-root
+      - test-parent
 
+  test-value:
+    behavior: test-value
+    types:
+      - value-1
+      - value-2
+      - value-3
+    from:
+      - test-root
+      - test-parent

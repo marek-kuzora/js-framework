@@ -1,35 +1,57 @@
+#
+# TODO YML is not complete:
+#
+# Remaining: table, form, input elements styles, events & attributes 
+# specific to uncommon elements.
+#
+
+
+
 behaviors:
 
-  dom/root:
+  dom-body:
+    parent: true
     location: fierry/dom/root
 
-  dom/element:
+  dom-element:
+    parent: true
     location: fierry/dom/element
+  
+  dom-text:
+    parent: false
+    location: fierry/dom/text
 
-  dom/tag:
+  dom-tag:
+    parent: false
     location: fierry/dom/tag
 
-  dom/attribute:
-    location: fierry/dom/attribute
-
-  dom/style:
+  dom-style:
+    parent: false
     location: fierry/dom/style
 
-  dom/event:
-    location: fierry/dom/event
+  dom-attribute:
+    parent: false
+    location: fierry/dom/attribute
 
 
 actions:
 
-  dom/body:
+  dom-body:
     root: true
-    behavior: dom/root
+    behavior: dom-body
     groups:
-      - dom/element
-      - dom/element/common
+      - dom-element
 
-  dom/structure:
-    behavior: dom/element
+  dom-text-node:
+    behavior: dom-text
+    types:
+      - text
+    from:
+      - dom-element
+
+
+  dom-structure:
+    behavior: dom-element
     types:
       - div
       - header
@@ -40,12 +62,12 @@ actions:
       - section
       - details
     groups:
-      - dom/element
-      - dom/element/common
-    from: [dom/element/common]
+      - dom-element
+    from:
+      - dom-element
 
-  dom/text:
-    behavior: dom/element
+  dom-text-common:
+    behavior: dom-element
     types:
       - p
       - pre
@@ -55,12 +77,12 @@ actions:
       - samp
       - blockquote
     groups:
-      - dom/element
-      - dom/element/common
-    from: [dom/element/common]
+      - dom-element
+    from:
+      - dom-element
 
-  dom/heading:
-    behavior: dom/element
+  dom-text-headings:
+    behavior: dom-element
     types:
       - h1
       - h2
@@ -69,12 +91,12 @@ actions:
       - h5
       - h6
     groups:
-      - dom/element
-      - dom/element/common
-    from: [dom/element/common]
+      - dom-element
+    from:
+      - dom-element
 
-  dom/emphasis:
-    behavior: dom/element
+  dom-text-formatting:
+    behavior: dom-element
     types:
       - b
       - i
@@ -86,57 +108,60 @@ actions:
       - sup
       - small
     groups:
-      - dom/element
-      - dom/element/common
-    from: [dom/element/common]
+      - dom-element
+    from:
+      - dom-element
 
-  dom/list:
-    behavior: dom/element
+  dom-list:
+    behavior: dom-element
     types:
       - ol
       - ul
     groups:
-      - dom/element
-      - dom/element/list
-    from: [dom/element/common]
+      - dom-element
+      - dom-element-list
+    from:
+      - dom-element
 
-  dom/list-item:
-    behavior: dom/element
-    types: [li]
+  dom-list-item:
+    behavior: dom-element
+    types:
+      - li
     groups:
-      - dom/element
-      - dom/element/common
-    from: [dom/element/list]
+      - dom-element
+      - dom-element-common
+    from:
+      - dom-element-list
 
-  dom/anchor:
-    behavior: dom/element
-    types: [a]
+  dom-anchor:
+    behavior: dom-element
+    types:
+      - a
     groups:
-      - dom/element
-      - dom/element/common
-      - dom/element/anchor
-    from: [dom/element/common]
+      - dom-element
+      - dom-element-anchor
+    from:
+      - dom-element
 
-  dom/image:
-    behavior: dom/element
-    types: [img]
+  dom-image:
+    behavior: dom-element
+    types:
+      - img
     groups:
-      - dom/element
-      - dom/element/common
-      - dom/element/image
-    from: [dom/element/common]
+      - dom-element
+      - dom-element-image
+    from:
+      - dom-element
 
-#
-# TODO introduce ul, ol, li, table, form & input elements.
-# TODO introduce attributes specific to uncommon elements.
-#
+  dom-tag:
+    behavior: dom-tag
+    types:
+      - tag
+    from:
+      - dom-element
 
-  dom/tag:
-    behavior: dom/tag
-    from: [dom/element]
-
-  dom/attribute/common:
-    behavior: dom/attribute
+  dom-attribute-common:
+    behavior: dom-attribute
     types:
       - id
       - accesskey
@@ -150,18 +175,16 @@ actions:
       - spellcheck
       - tabindex
       - title
-    from: [dom/element]
+    from:
+      - dom-element
 
-  dom/style/common:
-    behavior: dom/style
+  dom-style-common:
+    behavior: dom-style
     types:
       - color
       - background
       - border
       - width
       - height
-    from: [dom/element]
-
-#
-# TODO introduce left styles & events.
-#
+    from:
+      - dom-element

@@ -1,20 +1,24 @@
 #
 # @require:
-#   Action: fierry/view/action
+#   Parent: fierry/view/parent
 #
 
 
 
 return class View
 
-  constructor: (@type_, @behavior_, @nodes_) ->
+  constructor: (@type_, @behavior_, @nodes_fn_) ->
 
 
-  run: (world, nodes_ = @nodes_) ->
-    n = (arr) -> nodes_.call(@, world, arr)
-    a = new Action(@type_, 0, null, @behavior_, (->), n)
-    return a.execute()
+  run: (world) ->
+    nodes_raw = @nodes_fn_
+    nodes_fn  = (_) -> nodes_raw.call(@, _, world)
+
+    action = new Parent(null, @type_, @behavior_, nodes_fn)
+    action.create()
+
+    return action
 
 
-  use: (world, parent) ->
-    return @nodes_.call(parent, world, new Array())
+  use: (_, parent, world) ->
+    @nodes_fn_.call(parent, _, world)

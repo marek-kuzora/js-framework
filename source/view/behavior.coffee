@@ -1,11 +1,7 @@
 return class Behavior
 
-  constructor: ->
+  create: ($) ->
 
-  create: ->
+  finalize: ($) ->
 
-  update: ->
-
-  finalize: ->
-
-  dispose: ->
+  dispose: ($) ->
