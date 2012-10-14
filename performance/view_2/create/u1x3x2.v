@@ -1,4 +1,4 @@
 /require fierry-pfc/view_2/create/p1x3x2 as tpl
 
-/define view-root:root
+/define test-root:root
   /use tpl: 0

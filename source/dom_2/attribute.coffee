@@ -5,7 +5,7 @@ return class Attribute
 
     if $.next_sibling(Attribute, $.type()) is null
       $.node.setAttribute($.type(), $.value())
-      
+
 
   dispose: ($) ->
     if $.next_sibling(Attribute, $.type()) is null

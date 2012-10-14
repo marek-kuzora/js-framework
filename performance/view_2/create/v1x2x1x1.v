@@ -1,4 +1,4 @@
-/define view-root:root
+/define test-root:root
   /parent-1
     /parent-2
       /value-3 "fafa"

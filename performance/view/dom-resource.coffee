@@ -16,4 +16,3 @@ class Dom extends Behavior
 
 
 return new Dom()
-

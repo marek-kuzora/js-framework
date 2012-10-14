@@ -1,10 +1,11 @@
 return class Root
 
   create: ($) ->
-    $.node = document.body
+    $.node = document.createElement('div')
 
 
   finalize: ($) ->
 
 
   dispose: ($) ->
+
