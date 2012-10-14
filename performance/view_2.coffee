@@ -12,4 +12,4 @@ performance '/view_2'
 # Load tests.
 F.run 'fierry-pfc/view_2/create'
 F.run 'fierry-pfc/view_2/dom'
-F.run 'fierry-pfc/view_2/find_sibling'
+F.run 'fierry-pfc/view_2/siblings'

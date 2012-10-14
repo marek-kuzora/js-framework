@@ -1,0 +1,40 @@
+behaviors:
+
+  view-parent:
+    location: fierry/view_3/behavior
+    parent:   true
+
+  view-value:
+    location: fierry/view_3/behavior
+    parent:   false
+
+
+actions:
+
+  view-root:
+    root: true
+    behavior: view-parent
+    groups:
+      - view-root
+
+  view-nodes:
+    behavior: view-parent
+    types:
+      - parent-1
+      - parent-2
+      - parent-3
+    groups:
+      - view-parent
+    from:
+      - view-root
+      - view-parent
+
+  view-value:
+    behavior: view-value
+    types:
+      - value-1
+      - value-2
+      - value-3
+    from:
+      - view-root
+      - view-parent

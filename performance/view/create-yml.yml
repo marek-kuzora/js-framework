@@ -1,7 +1,6 @@
 behaviors:
   pfc/dummy:
     location: fierry-pfc/view/create-resource
-    conflict: false
 
 actions:
 

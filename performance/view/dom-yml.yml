@@ -1,7 +1,6 @@
 behaviors:
   pfc/dom:
     location: fierry-pfc/view/dom-resource
-    conflict: false
  
 actions:
 

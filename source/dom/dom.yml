@@ -2,27 +2,21 @@ behaviors:
 
   dom/root:
     location: fierry/dom/root
-    conflict: false
 
   dom/element:
     location: fierry/dom/element
-    conflict: false
 
   dom/tag:
     location: fierry/dom/tag
-    conflict: false
 
   dom/attribute:
     location: fierry/dom/attribute
-    conflict: true
 
   dom/style:
     location: fierry/dom/style
-    conflict: true
 
   dom/event:
     location: fierry/dom/event
-    conflict: true
 
 
 actions:
