@@ -7,6 +7,7 @@
 
 
 // Forcing strict mode.
+// TODO fix issues with performance namespace to enable strict mode.
 // "use strict";
 
 // Copy the global scope from the browser or nodejs environment.
@@ -579,6 +580,33 @@ var F = (function() {
       o.__uid__ = F.uid_sequence_++;
     }
     return o.__uid__;
+  };
+
+
+
+  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+   *
+   * Single inheritance mechanism.
+   *
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+  /**
+   * Attaches parent class to its subclass via prototypal inheritance.
+   * Please note that this function does not preserve the existing
+   * prototype of the subclass and should be run immediatelly after
+   * the constructor function definition.
+   *
+   * @param cls     {Function}
+   * @param parent  {Function}
+   */
+  F.extend = function(cls, parent) {
+    var ctor = function() {}
+    ctor.prototype = parent.prototype;
+
+    cls.prototype = new ctor();
+    return cls;
   };
 
 
